@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.store.name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app.kubernetes.io/component: {{ .Values.store.labels.component }}
+    app.kubernetes.io/instance: {{ .Values.store.labels.instance }}
+    app.kubernetes.io/name: {{ .Values.store.labels.name }}
+    app.kubernetes.io/version: {{ .Values.store.image.tag }}
+spec:
+  clusterIP: None
+  ports:
+    - name: grpc
+      port: {{ .Values.store.ports.grpc }}
+      targetPort: {{ .Values.store.ports.grpc }}
+    - name: http
+      port: {{ .Values.store.ports.http }}
+      targetPort: {{ .Values.store.ports.http }}
+  selector:
+    app.kubernetes.io/component: {{ .Values.store.labels.component }}
+    app.kubernetes.io/instance: {{ .Values.store.labels.instance }}
+    app.kubernetes.io/name: {{ .Values.store.labels.name }}
+

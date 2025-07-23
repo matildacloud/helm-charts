@@ -1,0 +1,16 @@
+{{- if .Values.persistence.store.enabled }}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ .Release.Name }}-thanos-store-pv3
+spec:
+  capacity:
+    storage: {{ .Values.persistence.store.size }}  # Size from values.yaml
+  volumeMode: Filesystem
+  accessModes:
+    - {{ .Values.persistence.store.accessMode }}  # Access Mode from values.yaml
+  persistentVolumeReclaimPolicy: {{ .Values.persistence.store.reclaimPolicy }}  # Reclaim policy from values.yaml
+  hostPath:
+    path: {{ .Values.persistence.store.hostPath }}  # Path from values.yaml
+  storageClassName: {{ .Values.persistence.store.storageClassName }}  # Storage Class from values.yaml
+{{- end }}

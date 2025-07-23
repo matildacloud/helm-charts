@@ -1,0 +1,16 @@
+{{- if .Values.persistence.receive.enabled }}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ .Release.Name }}-thanos-receive-pv3
+spec:
+  capacity:
+    storage: {{ .Values.persistence.receive.size }}  # Size from values.yaml
+  volumeMode: Filesystem
+  accessModes:
+    - {{ .Values.persistence.receive.accessMode }}  # Access Mode from values.yaml
+  persistentVolumeReclaimPolicy: {{ .Values.persistence.reclaimPolicy }}  # Reclaim policy from values.yaml
+  hostPath:
+    path: {{ .Values.persistence.receive.hostPath }}  # Path from values.yaml
+  storageClassName: {{ .Values.persistence.receive.storageClassName }}  # Storage Class from values.yaml
+{{- end }}

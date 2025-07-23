@@ -1,0 +1,29 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ .Values.receiveIngestor.serviceMonitor.name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app.kubernetes.io/component: {{ .Values.receiveIngestor.labels.component }}
+    app.kubernetes.io/instance: {{ .Values.receiveIngestor.labels.instance }}
+    app.kubernetes.io/name: {{ .Values.receiveIngestor.labels.name }}
+    app.kubernetes.io/version: {{ .Values.receiveIngestor.image.tag }}
+spec:
+  endpoints:
+    - port: {{ .Values.receiveIngestor.serviceMonitor.port }}
+      relabelings:
+        - action: replace
+          separator: /
+          sourceLabels:
+            - namespace
+            - pod
+          targetLabel: instance
+        - action: replace
+          sourceLabels:
+            - __meta_kubernetes_service_label_controller_receive_thanos_io_shard
+          targetLabel: hashring
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: {{ .Values.receiveIngestor.labels.component }}
+      app.kubernetes.io/name: {{ .Values.receiveIngestor.labels.name }}
+

@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.receiveService.name | quote }}
+  namespace: {{ .Values.namespace | quote }}
+  labels:
+    app.kubernetes.io/component: {{ .Values.receiveService.labels.component | quote }}
+    app.kubernetes.io/instance: {{ .Values.receiveService.labels.instance | quote }}
+    app.kubernetes.io/name: {{ .Values.receiveService.labels.name | quote }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+    controller.receive.thanos.io/hashring: {{ .Values.receiveService.labels.hashring | quote }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - name: grpc
+      port: {{ .Values.receiveService.ports.grpc }}
+      targetPort: {{ .Values.receiveService.ports.grpc }}
+    - name: http
+      port: {{ .Values.receiveService.ports.http }}
+      targetPort: {{ .Values.receiveService.ports.http }}
+    - name: remote-write
+      port: {{ .Values.receiveService.ports.remoteWrite }}
+      targetPort: {{ .Values.receiveService.ports.remoteWrite }}
+  selector:
+    app.kubernetes.io/component: {{ .Values.receiveService.labels.component | quote }}
+    app.kubernetes.io/instance: {{ .Values.receiveService.labels.instance | quote }}
+    app.kubernetes.io/name: {{ .Values.receiveService.labels.name | quote }}
+    controller.receive.thanos.io/hashring: {{ .Values.receiveService.labels.hashring | quote }}
+

@@ -1,0 +1,18 @@
+apiVersion: v2
+name: matilda-thanos
+description: A Helm chart for deploying Thanos components on Kubernetes.
+
+type: application
+
+# Chart version (increment on changes to the chart or templates)
+version: 0.1.0
+
+# Application version (matches the Thanos app version you're deploying)
+appVersion: "v0.31.0"
+
+# Recommended: Add an icon for visual representation in UIs like ArtifactHub
+icon: https://raw.githubusercontent.com/thanos-io/thanos/master/docs/icon/thanos-logo.png
+
+# Optional: Add maintainers or source URL if needed
+# maintainers:
+
