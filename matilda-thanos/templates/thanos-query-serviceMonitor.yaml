@@ -1,12 +1,13 @@
+{{- if .Values.query.serviceMonitor.enabled }}
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: {{ .Values.query.serviceMonitor.name }}
-  namespace: {{ .Values.query.namespace }}
+  namespace: {{ .Values.namespace }}
   labels:
-    app.kubernetes.io/component: {{ .Values.query.labels.component }}
-    app.kubernetes.io/instance: {{ .Values.query.labels.instance }}
-    app.kubernetes.io/name: {{ .Values.query.labels.name }}
+    app.kubernetes.io/component: query-layer
+    app.kubernetes.io/instance: thanos-query
+    app.kubernetes.io/name: thanos-query
     app.kubernetes.io/version: {{ .Chart.AppVersion }}
 spec:
   endpoints:
@@ -20,7 +21,8 @@ spec:
           targetLabel: instance
   selector:
     matchLabels:
-      app.kubernetes.io/component: {{ .Values.query.labels.component }}
-      app.kubernetes.io/instance: {{ .Values.query.labels.instance }}
-      app.kubernetes.io/name: {{ .Values.query.labels.name }}
+      app.kubernetes.io/component: query-layer
+      app.kubernetes.io/instance: thanos-query
+      app.kubernetes.io/name: thanos-query
+{{- end }}
 

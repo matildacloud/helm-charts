@@ -1,81 +1,39 @@
+# Namespace for all Thanos components
 namespace: thanos
 
+# Global image configuration
 image:
   repository: quay.io/thanos/thanos
   tag: v0.31.0
   pullPolicy: IfNotPresent
 
+# Global service configuration
 service:
   type: NodePort
   grpcPort: 10901
   httpPort: 10902
   remoteWritePort: 19291
-  ports:
-    grpc: 10901
-    http: 10902
-    remoteWrite: 19291
 
+# Query component configuration
 query:
-  name: thanos-query
   replicaCount: 1
-  labels:
-    component: query
-    instance: thanos-query
-    name: thanos-query
   service:
     type: NodePort
     grpcNodePort: 31093
     httpNodePort: 30093
   serviceAccount:
     name: thanos-query-v2
-    annotations: {}
   serviceMonitor:
     enabled: true
     name: thanos-query-servicemonitor
     port: http
-  replicaLabels: []
-  queryEndpoints: []
-  storeEndpoints: []
-  log:
-    level: info
-    format: logfmt
+  resources: {}
   affinity: {}
   nodeSelector: {}
-  livenessProbe:
-    periodSeconds: 30
-    failureThreshold: 8
-  readinessProbe:
-    periodSeconds: 5
-    failureThreshold: 20
-  resources: {}
-  securityContext:
-    container:
-      allowPrivilegeEscalation: false
-      capabilities:
-        drop: [ "ALL" ]
-      readOnlyRootFilesystem: true
-      runAsGroup: 65532
-      runAsNonRoot: true
-      runAsUser: 65534
-      seccompProfile:
-        type: RuntimeDefault
-    pod:
-      fsGroup: 65534
-      runAsGroup: 65532
-      runAsNonRoot: true
-      runAsUser: 65534
-      seccompProfile:
-        type: RuntimeDefault
-  terminationMessagePolicy: File
-  terminationGracePeriodSeconds: 120
 
+# Store component configuration
 store:
-  name: thanos-store
   replicaCount: 1
-  labels:
-    component: object-store-gateway
-    instance: thanos-store
-    name: thanos-store
   service:
     type: NodePort
     grpcNodePort: 31091
@@ -87,68 +45,22 @@ store:
     name: data
     storage: 10Gi
     storageClassName: local-path
-    accessModes: [ "ReadWriteOnce" ]
-  affinity:
-    podAntiAffinity:
-      weight: 100
-      topologyKeys: [ "kubernetes.io/hostname" ]
+    accessModes: ["ReadWriteOnce"]
   objstore:
     secretName: thanos-objectstorage
     secretKey: thanos.yaml
-  probes:
-    liveness:
-      path: /-/healthy
-      port: 10902
-      scheme: HTTP
-      periodSeconds: 30
-      failureThreshold: 8
-      timeoutSeconds: 1
-    readiness:
-      path: /-/ready
-      port: 10902
-      scheme: HTTP
-      periodSeconds: 5
-      failureThreshold: 20
-  ignoreDeletionMarksDelay: 24h
-  terminationGracePeriodSeconds: 120
   serviceAccount:
     name: thanos-store-v2
-    annotations: {}
-  securityContext:
-    container:
-      allowPrivilegeEscalation: false
-      capabilities:
-        drop: [ "ALL" ]
-      readOnlyRootFilesystem: true
-      runAsGroup: 65532
-      runAsNonRoot: true
-      runAsUser: 65534
-      seccompProfile:
-        type: RuntimeDefault
-    pod:
-      fsGroup: 65534
-      runAsGroup: 65532
-      runAsNonRoot: true
-      runAsUser: 65534
-      seccompProfile:
-        type: RuntimeDefault
-  resources: {}
   serviceMonitor:
     enabled: true
     name: thanos-store-servicemonitor
     port: http
-  image:
-    repository: quay.io/thanos/thanos
-    tag: v0.31.0
-    pullPolicy: IfNotPresent
+  resources: {}
+  affinity: {}
 
+# Receive Ingestor component configuration
 receiveIngestor:
-  name: thanos-receive
   replicaCount: 1
-  labels:
-    component: receive-ingestor
-    instance: thanos-receive
-    name: thanos-receive
   service:
     type: NodePort
     grpcNodePort: 31092
@@ -158,23 +70,16 @@ receiveIngestor:
     grpc: 10901
   serviceAccount:
     name: thanos-receive-v2
-    annotations: {}
   serviceMonitor:
     enabled: true
     name: thanos-receive-servicemonitor
     port: http
-  image:
-    repository: quay.io/thanos/thanos
-    tag: v0.31.0
-    pullPolicy: IfNotPresent
+  resources: {}
+  affinity: {}
+  nodeSelector: {}
 
+# Receive Service configuration
 receiveService:
-  name: thanos-receive-service
-  labels:
-    component: receive-ingestor
-    instance: thanos-receive
-    name: thanos-receive
-    hashring: hashring-v1
   service:
     type: NodePort
     grpcNodePort: 32091
@@ -185,70 +90,29 @@ receiveService:
     http: 10902
     remoteWrite: 19291
 
+# Receive StatefulSet configuration
 receiveStatefulSet:
-  name: thanos-receive
   replicas: 1
   minReadySeconds: 10
-  labels:
-    component: receive-ingestor
-    instance: thanos-receive
-    name: thanos-receive
-    controller: receive-controller
-    hashring: hashring-v1
   serviceAccountName: thanos-receive-v2
-  terminationGracePeriodSeconds: 120
-  affinity: {}
-  nodeSelector: {}
-  podSecurityContext:
-    fsGroup: 65534
-    runAsGroup: 65532
-    runAsNonRoot: true
-    runAsUser: 65534
-  env: []
-  livenessProbe:
-    httpGet:
-      path: /-/healthy
-      port: 10902
-      scheme: HTTP
-    initialDelaySeconds: 30
-    timeoutSeconds: 1
-    periodSeconds: 30
-    successThreshold: 1
-    failureThreshold: 8
-  readinessProbe:
-    httpGet:
-      path: /-/ready
-      port: 10902
-      scheme: HTTP
-    initialDelaySeconds: 5
-    timeoutSeconds: 1
-    periodSeconds: 5
-    successThreshold: 1
-    failureThreshold: 20
   storage: 10Gi
   storageClassName: local-path
+  affinity: {}
+  nodeSelector: {}
 
-labels:
-  component: query
-  instance: thanos-query
-  name: thanos-query
-
-log:
-  level: info
-  format: logfmt
-
+# Persistence configuration for PV/PVC
 persistence:
-   store:
-     enabled: true  # Enable/disable persistence
-     size: 10Gi  # Size of the storage for the PVC and PV (match PVC and PV size)
-     accessMode: ReadWriteOnce  # PVC Access Mode
-     reclaimPolicy: Retain  # Reclaim Policy for PV (can be Retain, Delete, or Recycle)
-     storageClassName: ""  # Storage Class (use "standard" or leave it empty if not needed)
-     hostPath: /var/thanos/receive
-   receive:
-     enabled: true  # Enable/disable persistence
-     size: 10Gi  # Size of the storage for the PVC and PV (match PVC and PV size)
-     accessMode: ReadWriteOnce  # PVC Access Mode
-     reclaimPolicy: Retain  # Reclaim Policy for PV (can be Retain, Delete, or Recycle)
-     storageClassName: ""  # Storage Class (use "standard" or leave it empty if not needed)
-     hostPath: /var/thanos/store
+  store:
+    enabled: true
+    size: 10Gi
+    accessMode: ReadWriteOnce
+    reclaimPolicy: Retain
+    storageClassName: ""
+    hostPath: /var/thanos/store
+  receive:
+    enabled: true
+    size: 10Gi
+    accessMode: ReadWriteOnce
+    reclaimPolicy: Retain
+    storageClassName: ""
+    hostPath: /var/thanos/receive

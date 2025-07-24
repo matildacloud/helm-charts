@@ -2,14 +2,14 @@ apiVersion: v1
 kind: Service
 metadata:
   name: thanos-query
-  namespace: thanos
+  namespace: {{ .Values.namespace }}
   labels:
     app.kubernetes.io/component: query-layer
     app.kubernetes.io/instance: thanos-query
     app.kubernetes.io/name: thanos-query
     app.kubernetes.io/version: {{ .Chart.AppVersion }}
 spec:
-  type: {{ .Values.service.type }}
+  type: {{ .Values.query.service.type }}
   selector:
     app.kubernetes.io/component: query-layer
     app.kubernetes.io/instance: thanos-query
@@ -18,8 +18,12 @@ spec:
     - name: grpc
       port: {{ .Values.service.grpcPort }}
       targetPort: grpc
-      nodePort: {{ .Values.service.grpcNodePort }}
+      {{- if eq .Values.query.service.type "NodePort" }}
+      nodePort: {{ .Values.query.service.grpcNodePort }}
+      {{- end }}
     - name: http
       port: {{ .Values.service.httpPort }}
       targetPort: http
-      nodePort: {{ .Values.service.httpNodePort }}
+      {{- if eq .Values.query.service.type "NodePort" }}
+      nodePort: {{ .Values.query.service.httpNodePort }}
+      {{- end }}

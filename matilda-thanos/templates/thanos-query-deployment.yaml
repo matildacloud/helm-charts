@@ -1,31 +1,34 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "thanos.query.fullname" . }}
+  name: thanos-query
   namespace: {{ .Values.namespace }}
   labels:
-    app.kubernetes.io/component: {{ .Values.query.labels.component | default "query" }}
-    app.kubernetes.io/instance: {{ .Values.query.labels.instance | default "thanos-query" }}
-    app.kubernetes.io/name: {{ .Values.query.labels.name | default "thanos-query" }}
+    app.kubernetes.io/component: query-layer
+    app.kubernetes.io/instance: thanos-query
+    app.kubernetes.io/name: thanos-query
     app.kubernetes.io/version: {{ .Chart.AppVersion }}
 spec:
   replicas: {{ .Values.query.replicaCount }}
   selector:
     matchLabels:
-      app.kubernetes.io/component: {{ .Values.query.labels.component | default "query" }}
-      app.kubernetes.io/instance: {{ .Values.query.labels.instance | default "thanos-query" }}
-      app.kubernetes.io/name: {{ .Values.query.labels.name | default "thanos-query" }}
+      app.kubernetes.io/component: query-layer
+      app.kubernetes.io/instance: thanos-query
+      app.kubernetes.io/name: thanos-query
   template:
     metadata:
       labels:
-        app.kubernetes.io/component: {{ .Values.query.labels.component | default "query" }}
-        app.kubernetes.io/instance: {{ .Values.query.labels.instance | default "thanos-query" }}
-        app.kubernetes.io/name: {{ .Values.query.labels.name | default "thanos-query" }}
+        app.kubernetes.io/component: query-layer
+        app.kubernetes.io/instance: thanos-query
+        app.kubernetes.io/name: thanos-query
         app.kubernetes.io/version: {{ .Chart.AppVersion }}
     spec:
-      affinity: {{- toYaml .Values.query.affinity | nindent 8 }}
+      {{- with .Values.query.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
-        - name: {{ .Values.query.labels.name | default "thanos-query" }}
+        - name: thanos-query
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
@@ -56,20 +59,39 @@ spec:
               path: /-/healthy
               port: {{ .Values.service.httpPort }}
               scheme: HTTP
-            periodSeconds: {{ .Values.query.livenessProbe.periodSeconds }}
-            failureThreshold: {{ .Values.query.livenessProbe.failureThreshold }}
+            periodSeconds: 30
+            failureThreshold: 8
           readinessProbe:
             httpGet:
               path: /-/ready
               port: {{ .Values.service.httpPort }}
               scheme: HTTP
-            periodSeconds: {{ .Values.query.readinessProbe.periodSeconds }}
-            failureThreshold: {{ .Values.query.readinessProbe.failureThreshold }}
-          resources: {{- toYaml .Values.query.resources | nindent 12 }}
-          securityContext: {{- toYaml .Values.query.securityContext.container | nindent 12 }}
-          terminationMessagePolicy: {{ .Values.query.terminationMessagePolicy }}
-      nodeSelector: {{- toYaml .Values.query.nodeSelector | nindent 8 }}
-      securityContext: {{- toYaml .Values.query.securityContext.pod | nindent 8 }}
+            periodSeconds: 5
+            failureThreshold: 20
+          resources:
+            {{- toYaml .Values.query.resources | nindent 12 }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+            readOnlyRootFilesystem: true
+            runAsGroup: 65532
+            runAsNonRoot: true
+            runAsUser: 65534
+            seccompProfile:
+              type: RuntimeDefault
+          terminationMessagePolicy: File
+      {{- with .Values.query.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        fsGroup: 65534
+        runAsGroup: 65532
+        runAsNonRoot: true
+        runAsUser: 65534
+        seccompProfile:
+          type: RuntimeDefault
       serviceAccountName: {{ .Values.query.serviceAccount.name }}
-      terminationGracePeriodSeconds: {{ .Values.query.terminationGracePeriodSeconds }}
+      terminationGracePeriodSeconds: 120
 

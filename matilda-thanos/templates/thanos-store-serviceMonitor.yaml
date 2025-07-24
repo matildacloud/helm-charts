@@ -5,10 +5,10 @@ metadata:
   name: {{ .Values.store.serviceMonitor.name }}
   namespace: {{ .Values.namespace }}
   labels:
-    app.kubernetes.io/component: {{ .Values.store.labels.component }}
-    app.kubernetes.io/instance: {{ .Values.store.labels.instance }}
-    app.kubernetes.io/name: {{ .Values.store.labels.name }}
-    app.kubernetes.io/version: {{ .Values.store.labels.version | default .Values.store.labels.name }}
+    app.kubernetes.io/component: object-store-gateway
+    app.kubernetes.io/instance: thanos-store
+    app.kubernetes.io/name: thanos-store
+    app.kubernetes.io/version: {{ .Values.store.image.tag }}
 spec:
   endpoints:
     - port: {{ .Values.store.serviceMonitor.port }}
@@ -21,8 +21,8 @@ spec:
           targetLabel: instance
   selector:
     matchLabels:
-      app.kubernetes.io/component: {{ .Values.store.labels.component }}
-      app.kubernetes.io/instance: {{ .Values.store.labels.instance }}
-      app.kubernetes.io/name: {{ .Values.store.labels.name }}
+      app.kubernetes.io/component: object-store-gateway
+      app.kubernetes.io/instance: thanos-store
+      app.kubernetes.io/name: thanos-store
 {{- end }}
 

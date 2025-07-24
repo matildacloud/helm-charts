@@ -1,0 +1,63 @@
+{{- if .Values.includeScript }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "matilda-k8s-svc.fullname" . }}-scripts
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "matilda-k8s-svc.labels" . | nindent 4 }}
+data:
+  generate-kubeconfig.sh: |
+    #!/bin/bash
+
+    # Script to generate kubeconfig for matilda service account
+    # Usage: ./generate-kubeconfig.sh [namespace] [service-account-name]
+
+    set -e
+
+    NAMESPACE=${1:-"default"}
+    SERVICE_ACCOUNT=${2:-"matilda-readonly-sa"}
+    CLUSTER_NAME=${3:-"kubernetes"}
+    OUTPUT_FILE=${4:-"matilda-kubeconfig.yaml"}
+
+    echo "Generating kubeconfig for service account: $SERVICE_ACCOUNT in namespace: $NAMESPACE"
+
+    # Get the service account token
+    echo "Getting service account token..."
+    TOKEN=$(kubectl create token $SERVICE_ACCOUNT -n $NAMESPACE --duration=0)
+
+    # Get cluster info
+    echo "Getting cluster information..."
+    CLUSTER_SERVER=$(kubectl config view --minify -o jsonpath='{.clusters[0].cluster.server}')
+
+    # Get cluster CA certificate
+    echo "Getting cluster CA certificate..."
+    CA_CERT=$(kubectl config view --minify -o jsonpath='{.clusters[0].cluster.certificate-authority-data}')
+
+    # Create kubeconfig
+    echo "Creating kubeconfig file: $OUTPUT_FILE"
+    cat > $OUTPUT_FILE << EOF
+    apiVersion: v1
+    kind: Config
+    clusters:
+    - name: $CLUSTER_NAME
+      cluster:
+        server: $CLUSTER_SERVER
+        certificate-authority-data: $CA_CERT
+    contexts:
+    - name: $CLUSTER_NAME-context
+      context:
+        cluster: $CLUSTER_NAME
+        namespace: $NAMESPACE
+        user: $SERVICE_ACCOUNT
+    current-context: $CLUSTER_NAME-context
+    users:
+    - name: $SERVICE_ACCOUNT
+      user:
+        token: $TOKEN
+    EOF
+
+    echo "Kubeconfig generated successfully!"
+    echo "File: $OUTPUT_FILE"
+    echo "Usage: kubectl --kubeconfig=$OUTPUT_FILE get pods --all-namespaces"
+{{- end }} 

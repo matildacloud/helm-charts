@@ -1,0 +1,45 @@
+Thank you for installing {{ .Chart.Name }}.
+
+Your release is named {{ .Release.Name }}.
+
+To learn more about the release, try:
+
+  $ helm status {{ .Release.Name }}
+  $ helm get all {{ .Release.Name }}
+
+To generate kubeconfig for the service account:
+
+{{- if .Values.includeScript }}
+  # Extract the script from ConfigMap:
+  $ kubectl get configmap {{ include "matilda-k8s-svc.fullname" . }}-scripts -n {{ .Release.Namespace }} -o jsonpath='{.data.generate-kubeconfig\.sh}' > generate-kubeconfig.sh
+  $ chmod +x generate-kubeconfig.sh
+  $ ./generate-kubeconfig.sh {{ .Values.serviceAccount.namespace }} {{ .Values.serviceAccount.name }}
+{{- else }}
+  # Use the one-liner approach:
+{{- end }}
+
+Or use the one-liner:
+  $ kubectl create token {{ .Values.serviceAccount.name }} -n {{ .Values.serviceAccount.namespace }} --duration=0 | kubectl config set-credentials {{ .Values.serviceAccount.name }} --token=- && kubectl config set-context {{ .Values.serviceAccount.name }}-context --user={{ .Values.serviceAccount.name }} --cluster=$(kubectl config current-context)
+
+Test the kubeconfig:
+   $ kubectl --kubeconfig=matilda-kubeconfig.yaml get nodes
+
+{{- if .Values.serviceAccount.create }}
+Service Account Details:
+  Name: {{ .Values.serviceAccount.name }}
+  Namespace: {{ .Values.serviceAccount.namespace }}
+{{- end }}
+
+{{- if and .Values.rbac.create .Values.clusterRole.create }}
+Cluster Role Details:
+  Name: {{ .Values.clusterRole.name }}
+  Permissions: Read-only access to all cluster resources
+{{- end }}
+
+{{- if and .Values.rbac.create .Values.clusterRoleBinding.create }}
+Cluster Role Binding Details:
+  Name: {{ .Values.clusterRoleBinding.name }}
+  Binds: {{ .Values.serviceAccount.name }} to {{ .Values.clusterRole.name }}
+{{- end }}
+
+For more information, visit: 

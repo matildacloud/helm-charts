@@ -1,0 +1,14 @@
+Thank you for installing {{ .Chart.Name }}.
+
+Your release is named {{ .Release.Name }}.
+
+## Next Steps
+
+- Check release status:
+  $ helm status {{ .Release.Name }}
+
+- View agent logs:
+  $ kubectl logs -l app.kubernetes.io/name={{ include "matilda-k8s-agent.name" . }} -n {{ .Release.Namespace }}
+
+- To update assetid or integrationid:
+  $ helm upgrade {{ .Release.Name }} {{ .Chart.Name }} --set assetid=NEW_ASSET_ID --set integrationid=NEW_INTEGRATION_ID 

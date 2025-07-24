@@ -3,20 +3,53 @@ entries:
   matilda-k8s-agent:
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2025-07-24T13:32:08.710646493-04:00"
-    description: A Helm chart for Kubernetes
-    digest: fe96de868394c662f2a1e8132fdf27a6b48c0246177e82189a9e58522c30bd57
+    created: "2025-07-24T17:10:28.8914847-05:00"
+    description: A Helm chart for Matilda Kubernetes Agent with secure configuration
+      management
+    digest: 5abea495fd8714f11ec42e1cedb298eca8f3edaf0bed06495eb81c2cc326dd4a
+    home: https://github.com/matildacloud/helm-charts
+    keywords:
+    - kubernetes
+    - agent
+    - monitoring
+    - discovery
+    kubeVersion: '>=1.19.0-0'
+    maintainers:
+    - email: matilda@example.com
+      name: Matilda Team
     name: matilda-k8s-agent
+    sources:
+    - https://github.com/matildacloud/helm-charts
     type: application
     urls:
     - https://matildacloud.github.io/helm-charts/matilda-k8s-agent-0.1.0.tgz
     version: 0.1.0
+  matilda-k8s-svc:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2025-07-24T17:10:28.8914847-05:00"
+    description: A Helm chart for creating a service account with read-only permissions
+      and generating kubeconfig with non-expiring token
+    digest: 0a737beb7b8477e45fd3535acb69808ac239780c41bbdf40edf3ffc7843e27e5
+    keywords:
+    - kubernetes
+    - service-account
+    - kubeconfig
+    - read-only
+    maintainers:
+    - email: githubadmin@matildacloud.com
+      name: Matilda Team
+    name: matilda-k8s-svc
+    type: application
+    urls:
+    - https://matildacloud.github.io/helm-charts/matilda-k8s-svc-0.1.0.tgz
+    version: 0.1.0
   matilda-thanos:
   - apiVersion: v2
     appVersion: v0.31.0
-    created: "2025-07-24T13:32:08.715841064-04:00"
+    created: "2025-07-24T17:10:28.8914847-05:00"
     description: A Helm chart for deploying Thanos components on Kubernetes.
-    digest: ce9f7c009117964b7285d2c79863256ebdf67d180aa2b57774ddbbd437b6f016
+    digest: 0775282241cf564ad811b014f7d2b659143a579074bc142403fdb4b1b79e2ae2
     icon: https://raw.githubusercontent.com/thanos-io/thanos/master/docs/icon/thanos-logo.png
     name: matilda-thanos
     type: application
@@ -33,7 +66,7 @@ entries:
           url: https://github.com/prometheus/prometheus
     apiVersion: v2
     appVersion: v3.3.1
-    created: "2025-07-24T13:32:08.73649928-04:00"
+    created: "2025-07-24T17:10:28.9024291-05:00"
     dependencies:
     - condition: alertmanager.enabled
       name: alertmanager
@@ -52,7 +85,7 @@ entries:
       repository: https://prometheus-community.github.io/helm-charts
       version: 3.2.*
     description: Prometheus is a monitoring system and time series database.
-    digest: 070016d01e8e8a7a51bf23b354293e14882049cb2b5109a167943264efcd0ea3
+    digest: 33074e73dbdf3dcca51eecfb5f28bd89f8c5ba0a1ff20c9e8069384cb29b3b25
     home: https://prometheus.io/
     icon: https://raw.githubusercontent.com/prometheus/prometheus.github.io/master/assets/prometheus_logo-cb55bb5c346.png
     keywords:
@@ -86,4 +119,4 @@ entries:
     urls:
     - https://matildacloud.github.io/helm-charts/prometheus-27.14.0.tgz
     version: 27.14.0
-generated: "2025-07-24T13:32:08.709590554-04:00"
+generated: "2025-07-24T17:10:28.8828859-05:00"

@@ -4,5 +4,5 @@ data:
 kind: ConfigMap
 metadata:
   name: hashring-config
-  namespace: thanos
+  namespace: {{ .Values.namespace }}
 

@@ -1,12 +1,13 @@
+{{- if .Values.receiveIngestor.serviceMonitor.enabled }}
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: {{ .Values.receiveIngestor.serviceMonitor.name }}
   namespace: {{ .Values.namespace }}
   labels:
-    app.kubernetes.io/component: {{ .Values.receiveIngestor.labels.component }}
-    app.kubernetes.io/instance: {{ .Values.receiveIngestor.labels.instance }}
-    app.kubernetes.io/name: {{ .Values.receiveIngestor.labels.name }}
+    app.kubernetes.io/component: receive-ingestor
+    app.kubernetes.io/instance: thanos-receive
+    app.kubernetes.io/name: thanos-receive
     app.kubernetes.io/version: {{ .Values.receiveIngestor.image.tag }}
 spec:
   endpoints:
@@ -24,6 +25,7 @@ spec:
           targetLabel: hashring
   selector:
     matchLabels:
-      app.kubernetes.io/component: {{ .Values.receiveIngestor.labels.component }}
-      app.kubernetes.io/name: {{ .Values.receiveIngestor.labels.name }}
+      app.kubernetes.io/component: receive-ingestor
+      app.kubernetes.io/name: thanos-receive
+{{- end }}
 

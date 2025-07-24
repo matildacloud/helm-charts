@@ -1,0 +1,69 @@
+# Default values for matilda-k8s-svc
+# This is a YAML-formatted file.
+
+# Service Account Configuration
+serviceAccount:
+  # Create service account
+  create: true
+  # Service account name
+  name: "matilda-readonly-sa"
+  # Service account namespace
+  namespace: "default"
+  # Annotations for the service account
+  annotations: {}
+  # Labels for the service account
+  labels: {}
+
+# Cluster Role Configuration
+clusterRole:
+  # Create cluster role
+  create: true
+  # Cluster role name
+  name: "matilda-readonly-role"
+  # Rules for read-only access to all cluster resources
+  rules:
+    - apiGroups: ["*"]
+      resources: ["*"]
+      verbs: ["get", "list", "watch"]
+
+# Cluster Role Binding Configuration
+clusterRoleBinding:
+  # Create cluster role binding
+  create: true
+  # Cluster role binding name
+  name: "matilda-readonly-binding"
+
+# Kubeconfig Configuration
+kubeconfig:
+  # Cluster name in kubeconfig
+  clusterName: "kubernetes"
+  # Cluster server URL (will be auto-detected if not specified)
+  clusterServer: ""
+
+# RBAC Configuration
+rbac:
+  # Create RBAC resources
+  create: true
+
+# Security Context
+securityContext:
+  # Run as non-root
+  runAsNonRoot: true
+  # Run as user ID
+  runAsUser: 1000
+  # Run as group ID
+  runAsGroup: 1000
+  # Read-only root filesystem
+  readOnlyRootFilesystem: true
+
+# Node Selector
+nodeSelector: {}
+
+# Tolerations
+tolerations: []
+
+# Affinity
+affinity: {}
+
+# Include script in ConfigMap
+includeScript: true 

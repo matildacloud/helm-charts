@@ -1,29 +1,38 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Values.receiveService.name | quote }}
-  namespace: {{ .Values.namespace | quote }}
+  name: thanos-receive-service
+  namespace: {{ .Values.namespace }}
   labels:
-    app.kubernetes.io/component: {{ .Values.receiveService.labels.component | quote }}
-    app.kubernetes.io/instance: {{ .Values.receiveService.labels.instance | quote }}
-    app.kubernetes.io/name: {{ .Values.receiveService.labels.name | quote }}
-    app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-    controller.receive.thanos.io/hashring: {{ .Values.receiveService.labels.hashring | quote }}
+    app.kubernetes.io/component: receive-ingestor
+    app.kubernetes.io/instance: thanos-receive
+    app.kubernetes.io/name: thanos-receive
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    controller.receive.thanos.io/hashring: hashring-v1
 spec:
-  type: {{ .Values.service.type }}
+  type: {{ .Values.receiveService.service.type }}
   ports:
     - name: grpc
       port: {{ .Values.receiveService.ports.grpc }}
       targetPort: {{ .Values.receiveService.ports.grpc }}
+      {{- if eq .Values.receiveService.service.type "NodePort" }}
+      nodePort: {{ .Values.receiveService.service.grpcNodePort }}
+      {{- end }}
     - name: http
       port: {{ .Values.receiveService.ports.http }}
       targetPort: {{ .Values.receiveService.ports.http }}
+      {{- if eq .Values.receiveService.service.type "NodePort" }}
+      nodePort: {{ .Values.receiveService.service.httpNodePort }}
+      {{- end }}
     - name: remote-write
       port: {{ .Values.receiveService.ports.remoteWrite }}
       targetPort: {{ .Values.receiveService.ports.remoteWrite }}
+      {{- if eq .Values.receiveService.service.type "NodePort" }}
+      nodePort: {{ .Values.receiveService.service.remoteWriteNodePort }}
+      {{- end }}
   selector:
-    app.kubernetes.io/component: {{ .Values.receiveService.labels.component | quote }}
-    app.kubernetes.io/instance: {{ .Values.receiveService.labels.instance | quote }}
-    app.kubernetes.io/name: {{ .Values.receiveService.labels.name | quote }}
-    controller.receive.thanos.io/hashring: {{ .Values.receiveService.labels.hashring | quote }}
+    app.kubernetes.io/component: receive-ingestor
+    app.kubernetes.io/instance: thanos-receive
+    app.kubernetes.io/name: thanos-receive
+    controller.receive.thanos.io/hashring: hashring-v1
 

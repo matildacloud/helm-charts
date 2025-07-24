@@ -1,26 +1,169 @@
+# Default values for matilda-k8s-agent
+# This is a YAML-formatted file.
+
+# Global configuration
+global:
+  # Global image registry override
+  imageRegistry: ""
+  # Global image pull secrets
+  imagePullSecrets: []
+
+# Replica configuration
 replicaCount: 2
 
+# Image configuration
 image:
-  agent: docker.io/matilda1/matilda-k8s-agent:latest
-  imagePullPolicy: IfNotPresent
-imagePullSecrets: k8s-agent-docker-secret
-dockerConfigJson: eyJhdXRocyI6eyJodHRwczovL2luZGV4LmRvY2tlci5pby92MS8iOnsidXNlcm5hbWUiOiJiYWxhdmFudGgiLCJwYXNzd29yZCI6ImRja3JfcGF0X0xuUndWWkpwNlJ4TG9mTVlJeGpPaFplSDd2dyIsImF1dGgiOiJZbUZzWVhaaGJuUm9PbVJqYTNKZmNHRjBYMHh1VW5kV1drcHdObEo0VEc5bVRWbEplR3BQYUZwbFNEZDJkdz09In19fQ==
+  registry: docker.io
+  repository: matilda1/matilda-k8s-agent
+  tag: "latest"
+  pullPolicy: IfNotPresent
+  # Override image registry
+  registryOverride: ""
 
+# Image pull secrets configuration
+# Use existing image pull secret for private registry access
+imagePullSecrets:
+  - name: "k8s-agent-docker-secret"
+
+# Service account configuration
 serviceAccount:
+  # Create service account
   create: true
-  name: k8s-agent
+  # Service account name
+  name: "k8s-agent"
+  # Annotations for the service account
+  annotations: {}
+  # Labels for the service account
+  labels: {}
 
+# Pod configuration
 podAnnotations: {}
 podLabels: {}
 
+# Service configuration
 service:
   type: ClusterIP
   port: 8080
+  # Service annotations
+  annotations: {}
+  # Service labels
+  labels: {}
 
+# RabbitMQ configuration
 rabbitMQ:
-  ip: 10.10.10.10
-  port: 32021
-  user: matilda
-  password: Matilda7#
-  assetId: Uyqgpe8074kVtb4GuoFcFzp99k6hCf
-  intgId: xyz
+  # RabbitMQ host/IP
+  host: "10.10.10.10"
+  # RabbitMQ port
+  port: "32021"
+  # RabbitMQ virtual host
+  vhost: "/"
+  # RabbitMQ connection timeout (seconds)
+  connectionTimeout: 30
+  # RabbitMQ heartbeat interval (seconds)
+  heartbeat: 60
+  # Reference to existing RabbitMQ secret
+  secret:
+    # Name of the existing secret containing RabbitMQ credentials
+    name: "rabbitmq-secret"
+    # Key for username in the secret
+    usernameKey: "username"
+    # Key for password in the secret
+    passwordKey: "password"
+
+# Asset configuration
+assetid: ""
+integrationid: ""
+
+# Security context configuration
+securityContext:
+  # Enable security context
+  enabled: true
+  # Run as non-root user
+  runAsNonRoot: true
+  # User ID to run as
+  runAsUser: 1000
+  # Group ID to run as
+  runAsGroup: 1000
+  # File system group
+  fsGroup: 1000
+  # Security capabilities
+  capabilities:
+    drop:
+      - ALL
+
+# Container security context
+containerSecurityContext:
+  # Enable container security context
+  enabled: true
+  # Run as non-root user
+  runAsNonRoot: true
+  # User ID to run as
+  runAsUser: 1000
+  # Group ID to run as
+  runAsGroup: 1000
+  # Read-only root filesystem
+  readOnlyRootFilesystem: true
+  # Allow privilege escalation
+  allowPrivilegeEscalation: false
+  # Security capabilities
+  capabilities:
+    drop:
+      - ALL
+
+# Resource limits and requests
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+# Node selector
+nodeSelector: {}
+
+# Tolerations
+tolerations: []
+
+# Affinity
+affinity: {}
+
+# Pod disruption budget
+podDisruptionBudget:
+  enabled: false
+  minAvailable: 1
+
+# Horizontal pod autoscaler
+hpa:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+
+# Liveness and readiness probes
+probes:
+  liveness:
+    enabled: true
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+    successThreshold: 1
+  readiness:
+    enabled: true
+    initialDelaySeconds: 5
+    periodSeconds: 5
+    timeoutSeconds: 3
+    failureThreshold: 3
+    successThreshold: 1
+
+# Logging configuration
+logging:
+  level: "info"
+  format: "json"
+
+# RBAC Configuration
+rbac:
+  # Create RBAC resources
+  create: true
