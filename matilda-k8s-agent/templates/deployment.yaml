@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k8s-agent
+  labels:
+    app: k8s-agent
+    type: discovery    
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: k8s-agent       
+  template:
+    metadata:
+      labels:
+        app: k8s-agent      
+    spec:
+      imagePullSecrets: 
+        - name: {{.Values.imagePullSecrets }}
+      serviceAccountName: {{ .Values.serviceAccount.name }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: {{ .Values.image.agent }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: RABBIT_MQ_IP
+              value: "{{ .Values.rabbitMQ.ip }}"
+            - name: RABBIT_MQ_PORT
+              value: "{{ .Values.rabbitMQ.port }}"
+            - name: RABBIT_MQ_USER
+              value: "{{ .Values.rabbitMQ.user }}"
+            - name: RABBIT_MQ_PASS
+              value: "{{ .Values.rabbitMQ.password }}"
+            - name: RABBIT_MQ_QUEUE_LISTEN
+              value: "{{ .Values.rabbitMQ.assetId }}"
+            - name: CLUSTER_ASSET_ID
+              value: "{{ .Values.rabbitMQ.assetId }}"
+            - name: INTEGRATION_ID
+              value: "{{ .Values.rabbitMQ.intgId }}"

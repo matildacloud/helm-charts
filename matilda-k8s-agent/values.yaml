@@ -1,0 +1,26 @@
+replicaCount: 2
+
+image:
+  agent: docker.io/matilda1/matilda-k8s-agent:latest
+  imagePullPolicy: IfNotPresent
+imagePullSecrets: k8s-agent-docker-secret
+dockerConfigJson: eyJhdXRocyI6eyJodHRwczovL2luZGV4LmRvY2tlci5pby92MS8iOnsidXNlcm5hbWUiOiJiYWxhdmFudGgiLCJwYXNzd29yZCI6ImRja3JfcGF0X0xuUndWWkpwNlJ4TG9mTVlJeGpPaFplSDd2dyIsImF1dGgiOiJZbUZzWVhaaGJuUm9PbVJqYTNKZmNHRjBYMHh1VW5kV1drcHdObEo0VEc5bVRWbEplR3BQYUZwbFNEZDJkdz09In19fQ==
+
+serviceAccount:
+  create: true
+  name: k8s-agent
+
+podAnnotations: {}
+podLabels: {}
+
+service:
+  type: ClusterIP
+  port: 8080
+
+rabbitMQ:
+  ip: 10.10.10.10
+  port: 32021
+  user: matilda
+  password: Matilda7#
+  assetId: Uyqgpe8074kVtb4GuoFcFzp99k6hCf
+  intgId: xyz
