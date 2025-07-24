@@ -3,14 +3,14 @@ entries:
   matilda-thanos:
   - apiVersion: v2
     appVersion: v0.31.0
-    created: "2025-07-24T01:06:39.706243871Z"
+    created: "2025-07-24T02:12:36.11298192Z"
     description: A Helm chart for deploying Thanos components on Kubernetes.
     digest: ce9f7c009117964b7285d2c79863256ebdf67d180aa2b57774ddbbd437b6f016
     icon: https://raw.githubusercontent.com/thanos-io/thanos/master/docs/icon/thanos-logo.png
     name: matilda-thanos
     type: application
     urls:
-    - https://github.com/matildacloud/helm-charts/matilda-thanos-0.1.0.tgz
+    - https://matildacloud.github.io/helm-charts/matilda-thanos-0.1.0.tgz
     version: 0.1.0
   prometheus:
   - annotations:
@@ -22,7 +22,7 @@ entries:
           url: https://github.com/prometheus/prometheus
     apiVersion: v2
     appVersion: v3.3.1
-    created: "2025-07-24T01:06:39.716178728Z"
+    created: "2025-07-24T02:12:36.122106936Z"
     dependencies:
     - condition: alertmanager.enabled
       name: alertmanager
@@ -73,6 +73,6 @@ entries:
     - https://github.com/kubernetes/kube-state-metrics
     type: application
     urls:
-    - https://github.com/matildacloud/helm-charts/prometheus-27.14.0.tgz
+    - https://matildacloud.github.io/helm-charts/prometheus-27.14.0.tgz
     version: 27.14.0
-generated: "2025-07-24T01:06:39.705220891Z"
+generated: "2025-07-24T02:12:36.11192144Z"
