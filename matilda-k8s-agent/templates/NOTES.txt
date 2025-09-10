@@ -1,14 +1,35 @@
-Thank you for installing {{ .Chart.Name }}.
+1. Get the application URL by running these commands:
+{{- if contains "NodePort" .Values.service.type }}
+  export NODE_PORT=$(kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ include "matilda-k8s-agent.fullname" . }})
+  export NODE_IP=$(kubectl get nodes --namespace {{ .Release.Namespace }} -o jsonpath="{.items[0].status.addresses[0].address}")
+  echo http://$NODE_IP:$NODE_PORT
+{{- else if contains "LoadBalancer" .Values.service.type }}
+     NOTE: It may take a few minutes for the LoadBalancer IP to be available.
+           You can watch the status of by running 'kubectl get --namespace {{ .Release.Namespace }} svc -w {{ include "matilda-k8s-agent.fullname" . }}'
+  export SERVICE_IP=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ include "matilda-k8s-agent.fullname" . }} --template "{{"{{ range (index .status.loadBalancer.ingress 0) }}{{.}}{{ end }}"}}")
+  echo http://$SERVICE_IP:{{ .Values.service.port }}
+{{- else if contains "ClusterIP" .Values.service.type }}
+  export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name={{ include "matilda-k8s-agent.name" . }},app.kubernetes.io/instance={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}")
+  export CONTAINER_PORT=$(kubectl get pod --namespace {{ .Release.Namespace }} $POD_NAME -o jsonpath="{.spec.containers[0].ports[0].containerPort}")
+  echo "Visit http://127.0.0.1:8080 to use your application"
+  kubectl --namespace {{ .Release.Namespace }} port-forward $POD_NAME 8080:$CONTAINER_PORT
+{{- end }}
 
-Your release is named {{ .Release.Name }}.
+2. Check the deployment status:
+  kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name={{ include "matilda-k8s-agent.name" . }},app.kubernetes.io/instance={{ .Release.Name }}"
 
-## Next Steps
+3. View logs:
+  kubectl logs --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name={{ include "matilda-k8s-agent.name" . }},app.kubernetes.io/instance={{ .Release.Name }}"
 
-- Check release status:
-  $ helm status {{ .Release.Name }}
+4. Check the service:
+  kubectl get svc --namespace {{ .Release.Namespace }} {{ include "matilda-k8s-agent.fullname" . }}
 
-- View agent logs:
-  $ kubectl logs -l app.kubernetes.io/name={{ include "matilda-k8s-agent.name" . }} -n {{ .Release.Namespace }}
+5. The namespace '{{ .Values.namespace.name }}' has been created automatically for this deployment.
 
-- To update assetid or integrationid:
-  $ helm upgrade {{ .Release.Name }} {{ .Chart.Name }} --set assetid=NEW_ASSET_ID --set integrationid=NEW_INTEGRATION_ID 
+{{- if .Values.secret.create }}
+6. A secret '{{ include "matilda-k8s-agent.secretName" . }}' has been created with your configuration.
+{{- end }}
+
+{{- if .Values.configMap.create }}
+7. A configmap '{{ include "matilda-k8s-agent.configMapName" . }}' has been created with your configuration.
+{{- end }}

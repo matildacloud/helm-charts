@@ -31,8 +31,27 @@ helm install prometheus-release matilda/prometheus
 ```
 
 ### matilda-k8s-agent
-A Helm chart for Kubernetes agent.
+A Helm chart for deploying the Matilda Kubernetes Agent with secure configuration management and API integration.
 
+**Features:**
+- Secure Configuration: Sensitive data stored in Kubernetes Secrets
+- API Integration: Configurable API host and authentication
+- Asset Management: Dynamic asset ID configuration
+- Security Hardened: Non-root execution, read-only filesystem, dropped capabilities
+- Resource Management: Configurable CPU and memory limits
+- RBAC Support: Optional RBAC creation with read-only permissions
+- Namespace Management: Automatic creation of matilda namespace
+
+**Quick Start:**
+```bash
+# Install with required parameters (namespace will be created automatically)
+helm install k8s-agent matilda/matilda-k8s-agent \
+  --set api_host=https://api.matildacloud.com \
+  --set api_key=YOUR_API_KEY \
+  --set id=YOUR_CLUSTER_ASSET_ID
+```
+
+**Basic Installation:**
 ```bash
 helm install agent-release matilda/matilda-k8s-agent
 ```

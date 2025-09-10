@@ -1,114 +1,92 @@
-# Default values for matilda-k8s-agent
+# Default values for k8s-agent.
 # This is a YAML-formatted file.
+# Declare variables to be passed into your templates.m
 
-# Global configuration
+
+# Global settings
 global:
-  # Global image registry override
+  # Global image registry
   imageRegistry: ""
   # Global image pull secrets
   imagePullSecrets: []
 
-# Replica configuration
-replicaCount: 2
+# Required parameters - these must be provided during installation
+api_host: ""  # Required: API host URL (e.g., https://api.example.com)
+api_key: ""   # Required: API key for authentication
+id: ""        # Required: Cluster asset ID
 
 # Image configuration
 image:
-  registry: docker.io
-  repository: matilda1/matilda-k8s-agent
+  repository: docker.io/matilda1/matilda-k8s-agent
   tag: "latest"
   pullPolicy: IfNotPresent
-  # Override image registry
-  registryOverride: ""
 
-# Image pull secrets configuration
-# Use existing image pull secret for private registry access
-imagePullSecrets:
-  - name: "k8s-agent-docker-secret"
+# Image pull secrets
+imagePullSecrets: []
+  # - name: myregistrykey
 
-# Service account configuration
-serviceAccount:
-  # Create service account
+# Namespace configuration - defaults to matilda
+namespace:
   create: true
-  # Service account name
-  name: "k8s-agent"
-  # Annotations for the service account
-  annotations: {}
-  # Labels for the service account
-  labels: {}
+  name: "matilda"
 
-# Pod configuration
+# Number of replicas
+replicaCount: 1
+
+# Pod annotations
 podAnnotations: {}
+
+# Pod labels
 podLabels: {}
+
+# Pod security context
+podSecurityContext:
+  fsGroup: 2000
+
+# Container security context
+securityContext:
+  capabilities:
+    drop:
+    - ALL
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsUser: 1000
 
 # Service configuration
 service:
   type: ClusterIP
   port: 8080
-  # Service annotations
+
+# Service account configuration
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
   annotations: {}
-  # Service labels
-  labels: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
 
-# RabbitMQ configuration
-rabbitMQ:
-  # RabbitMQ host/IP
-  host: "10.10.10.10"
-  # RabbitMQ port
-  port: "32021"
-  # RabbitMQ virtual host
-  vhost: "/"
-  # RabbitMQ connection timeout (seconds)
-  connectionTimeout: 30
-  # RabbitMQ heartbeat interval (seconds)
-  heartbeat: 60
-  # Reference to existing RabbitMQ secret
-  secret:
-    # Name of the existing secret containing RabbitMQ credentials
-    name: "rabbitmq-secret"
-    # Key for username in the secret
-    usernameKey: "username"
-    # Key for password in the secret
-    passwordKey: "password"
+# RBAC configuration
+rbac:
+  # Specifies whether RBAC resources should be created
+  create: true
 
-# Asset configuration
-assetid: ""
-integrationid: ""
+# Secret configuration
+secret:
+  # Specifies whether a secret should be created
+  create: true
+  # The name of the secret to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
 
-# Security context configuration
-securityContext:
-  # Enable security context
-  enabled: true
-  # Run as non-root user
-  runAsNonRoot: true
-  # User ID to run as
-  runAsUser: 1000
-  # Group ID to run as
-  runAsGroup: 1000
-  # File system group
-  fsGroup: 1000
-  # Security capabilities
-  capabilities:
-    drop:
-      - ALL
-
-# Container security context
-containerSecurityContext:
-  # Enable container security context
-  enabled: true
-  # Run as non-root user
-  runAsNonRoot: true
-  # User ID to run as
-  runAsUser: 1000
-  # Group ID to run as
-  runAsGroup: 1000
-  # Read-only root filesystem
-  readOnlyRootFilesystem: true
-  # Allow privilege escalation
-  allowPrivilegeEscalation: false
-  # Security capabilities
-  capabilities:
-    drop:
-      - ALL
+# ConfigMap configuration
+configMap:
+  # Specifies whether a configmap should be created
+  create: false
+  # The name of the configmap to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
 
 # Resource limits and requests
 resources:
@@ -119,6 +97,8 @@ resources:
     cpu: 100m
     memory: 128Mi
 
+
+
 # Node selector
 nodeSelector: {}
 
@@ -128,42 +108,14 @@ tolerations: []
 # Affinity
 affinity: {}
 
-# Pod disruption budget
-podDisruptionBudget:
-  enabled: false
-  minAvailable: 1
+# Name override for the application
+nameOverride: ""
 
-# Horizontal pod autoscaler
-hpa:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 10
-  targetCPUUtilizationPercentage: 80
-  targetMemoryUtilizationPercentage: 80
+# Full name override for the application
+fullnameOverride: ""
 
-# Liveness and readiness probes
-probes:
-  liveness:
-    enabled: true
-    initialDelaySeconds: 30
-    periodSeconds: 10
-    timeoutSeconds: 5
-    failureThreshold: 3
-    successThreshold: 1
-  readiness:
-    enabled: true
-    initialDelaySeconds: 5
-    periodSeconds: 5
-    timeoutSeconds: 3
-    failureThreshold: 3
-    successThreshold: 1
+# Additional labels to add to all resources
+extraLabels: {}
 
-# Logging configuration
-logging:
-  level: "info"
-  format: "json"
-
-# RBAC Configuration
-rbac:
-  # Create RBAC resources
-  create: true
+# Additional annotations to add to all resources
+extraAnnotations: {}

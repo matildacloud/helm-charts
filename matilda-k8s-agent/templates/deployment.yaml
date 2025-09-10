@@ -1,12 +1,20 @@
-{{- include "matilda-k8s-agent.validateValues" . -}}
+{{- if not .Values.api_host -}}
+{{- fail "api_host is required" -}}
+{{- end -}}
+{{- if not .Values.api_key -}}
+{{- fail "api_key is required" -}}
+{{- end -}}
+{{- if not .Values.id -}}
+{{- fail "id is required" -}}
+{{- end -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "matilda-k8s-agent.fullname" . }}
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "matilda-k8s-agent.labels" . | nindent 4 }}
-    app.kubernetes.io/component: agent
-    type: discovery
+    app.kubernetes.io/component: deployment
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
@@ -14,126 +22,57 @@ spec:
       {{- include "matilda-k8s-agent.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      labels:
-        {{- include "matilda-k8s-agent.selectorLabels" . | nindent 8 }}
       {{- with .Values.podAnnotations }}
       annotations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-    spec:
-      {{- if .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- range .Values.imagePullSecrets }}
-        - name: {{ .name }}
+      labels:
+        {{- include "matilda-k8s-agent.selectorLabels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
         {{- end }}
-      {{- end }}
-      serviceAccountName: {{ include "matilda-k8s-agent.serviceAccountName" . }}
-      {{- with .Values.securityContext }}
-      securityContext:
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      serviceAccountName: {{ include "matilda-k8s-agent.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          {{- with .Values.containerSecurityContext }}
           securityContext:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
-          {{- with .Values.resources }}
-          resources:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
-          {{- if .Values.probes.liveness.enabled }}
-          livenessProbe:
-            httpGet:
-              path: /health
-              port: {{ .Values.service.port }}
-            initialDelaySeconds: {{ .Values.probes.liveness.initialDelaySeconds }}
-            periodSeconds: {{ .Values.probes.liveness.periodSeconds }}
-            timeoutSeconds: {{ .Values.probes.liveness.timeoutSeconds }}
-            failureThreshold: {{ .Values.probes.liveness.failureThreshold }}
-            successThreshold: {{ .Values.probes.liveness.successThreshold }}
-          {{- end }}
-          {{- if .Values.probes.readiness.enabled }}
-          readinessProbe:
-            httpGet:
-              path: /ready
-              port: {{ .Values.service.port }}
-            initialDelaySeconds: {{ .Values.probes.readiness.initialDelaySeconds }}
-            periodSeconds: {{ .Values.probes.readiness.periodSeconds }}
-            timeoutSeconds: {{ .Values.probes.readiness.timeoutSeconds }}
-            failureThreshold: {{ .Values.probes.readiness.failureThreshold }}
-            successThreshold: {{ .Values.probes.readiness.successThreshold }}
-          {{- end }}
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
           env:
-            # RabbitMQ Configuration from ConfigMap (non-sensitive)
-            - name: RABBIT_MQ_HOST
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ include "matilda-k8s-agent.configMapName" . }}
-                  key: rabbitmq.host
-            - name: RABBIT_MQ_PORT
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ include "matilda-k8s-agent.configMapName" . }}
-                  key: rabbitmq.port
-            - name: RABBIT_MQ_VHOST
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ include "matilda-k8s-agent.configMapName" . }}
-                  key: rabbitmq.vhost
-            - name: RABBIT_MQ_CONNECTION_TIMEOUT
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ include "matilda-k8s-agent.configMapName" . }}
-                  key: rabbitmq.connectionTimeout
-            - name: RABBIT_MQ_HEARTBEAT
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ include "matilda-k8s-agent.configMapName" . }}
-                  key: rabbitmq.heartbeat
-            # RabbitMQ Credentials from existing Secret
-            - name: RABBIT_MQ_USER
+            - name: API_HOST
+              value: "{{ .Values.api_host }}"
+            - name: API_KEY
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.rabbitMQ.secret.name }}
-                  key: {{ .Values.rabbitMQ.secret.usernameKey }}
-            - name: RABBIT_MQ_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.rabbitMQ.secret.name }}
-                  key: {{ .Values.rabbitMQ.secret.passwordKey }}
-            # Asset Configuration from Secret
+                  name: {{ include "matilda-k8s-agent.secretName" . }}
+                  key: api-key
             - name: CLUSTER_ASSET_ID
               valueFrom:
                 secretKeyRef:
                   name: {{ include "matilda-k8s-agent.secretName" . }}
-                  key: assetid
-            - name: INTEGRATION_ID
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "matilda-k8s-agent.secretName" . }}
-                  key: integrationid
-            # Logging Configuration from ConfigMap
-            - name: LOG_LEVEL
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ include "matilda-k8s-agent.configMapName" . }}
-                  key: logging.level
-            - name: LOG_FORMAT
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ include "matilda-k8s-agent.configMapName" . }}
-                  key: logging.format
-            # Application Configuration from ConfigMap
-            - name: APP_NAME
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ include "matilda-k8s-agent.configMapName" . }}
-                  key: app.name
-            - name: APP_VERSION
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ include "matilda-k8s-agent.configMapName" . }}
-                  key: app.version
+                  key: cluster-asset-id
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

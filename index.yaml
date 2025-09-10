@@ -3,20 +3,19 @@ entries:
   matilda-k8s-agent:
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2025-07-24T17:10:28.8914847-05:00"
-    description: A Helm chart for Matilda Kubernetes Agent with secure configuration
-      management
-    digest: 5abea495fd8714f11ec42e1cedb298eca8f3edaf0bed06495eb81c2cc326dd4a
+    created: "2025-09-09T16:44:00.3067094-05:00"
+    description: A Helm chart for Matilda Kubernetes Agent
+    digest: 8ca903f28bc4c73e392df7c678296cc82d9f7563fdc2b96a9d0248c5e2e771ff
     home: https://github.com/matildacloud/helm-charts
+    icon: https://raw.githubusercontent.com/kubernetes/kubernetes/master/logo/logo.png
     keywords:
     - kubernetes
     - agent
+    - matilda
     - monitoring
-    - discovery
-    kubeVersion: '>=1.19.0-0'
     maintainers:
-    - email: matilda@example.com
-      name: Matilda Team
+    - email: support@matildacloud.com
+      name: Matilda Cloud Team
     name: matilda-k8s-agent
     sources:
     - https://github.com/matildacloud/helm-charts
@@ -27,7 +26,7 @@ entries:
   matilda-k8s-svc:
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2025-07-24T17:10:28.8914847-05:00"
+    created: "2025-09-09T16:44:00.3077103-05:00"
     description: A Helm chart for creating a service account with read-only permissions
       and generating kubeconfig with non-expiring token
     digest: 0a737beb7b8477e45fd3535acb69808ac239780c41bbdf40edf3ffc7843e27e5
@@ -47,7 +46,7 @@ entries:
   matilda-thanos:
   - apiVersion: v2
     appVersion: v0.31.0
-    created: "2025-07-24T17:10:28.8914847-05:00"
+    created: "2025-09-09T16:44:00.309709-05:00"
     description: A Helm chart for deploying Thanos components on Kubernetes.
     digest: 0775282241cf564ad811b014f7d2b659143a579074bc142403fdb4b1b79e2ae2
     icon: https://raw.githubusercontent.com/thanos-io/thanos/master/docs/icon/thanos-logo.png
@@ -66,7 +65,7 @@ entries:
           url: https://github.com/prometheus/prometheus
     apiVersion: v2
     appVersion: v3.3.1
-    created: "2025-07-24T17:10:28.9024291-05:00"
+    created: "2025-09-09T16:44:00.3227094-05:00"
     dependencies:
     - condition: alertmanager.enabled
       name: alertmanager
@@ -119,4 +118,4 @@ entries:
     urls:
     - https://matildacloud.github.io/helm-charts/prometheus-27.14.0.tgz
     version: 27.14.0
-generated: "2025-07-24T17:10:28.8828859-05:00"
+generated: "2025-09-09T16:44:00.3047097-05:00"

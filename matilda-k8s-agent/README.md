@@ -1,22 +1,25 @@
-# Matilda Kubernetes Agent Helm Chart
+# K8s Agent Helm Chart
 
-A Helm chart for deploying the Matilda Kubernetes Agent with secure configuration management and RabbitMQ integration.
+A Helm chart for deploying the Matilda Kubernetes Agent with secure configuration management and API integration.
+
+**Chart Version:** 0.1.0  
+**App Version:** 1.0.0
 
 ## Features
 
 - **Secure Configuration**: Sensitive data stored in Kubernetes Secrets
-- **RabbitMQ Integration**: Configurable message queue connectivity
-- **Asset Management**: Dynamic assetid and integrationid configuration
+- **API Integration**: Configurable API host and authentication
+- **Asset Management**: Dynamic asset ID configuration
 - **Security Hardened**: Non-root execution, read-only filesystem, dropped capabilities
-- **Health Monitoring**: Liveness and readiness probes
 - **Resource Management**: Configurable CPU and memory limits
 - **RBAC Support**: Optional RBAC creation with read-only permissions
+- **Namespace Management**: Automatic creation of matilda namespace
 
 ## Prerequisites
 
 - Kubernetes 1.19+
 - Helm 3.0+
-- RabbitMQ server accessible from the cluster
+- API access to Matilda Cloud platform
 
 ## Quick Start
 
@@ -27,54 +30,72 @@ A Helm chart for deploying the Matilda Kubernetes Agent with secure configuratio
 helm repo add matilda https://matildacloud.github.io/helm-charts/
 helm repo update
 
-# Install with required parameters (only assetid and integrationid are required at install time)
-helm install matilda-agent matilda/matilda-k8s-agent \
-  --set assetid=YOUR_ASSET_ID \
-  --set integrationid=YOUR_INTEGRATION_ID
+# Install with required parameters (namespace will be created automatically)
+helm install k8s-agent ./k8s-agent \
+  --set api_host=https://api.matildacloud.com \
+  --set api_key=YOUR_API_KEY \
+  --set id=YOUR_CLUSTER_ASSET_ID
 ```
 
-**Prerequisites:**
-- Ensure you have the required image pull secret (`k8s-agent-docker-secret`) created for private registry access
-- Ensure you have the RabbitMQ secret (`rabbitmq-secret`) created with username and password keys
+### Using Values File
 
-### Customizing RabbitMQ Connection
-
-By default, RabbitMQ host, port, vhost, and other connection settings are configured in `values.yaml`. If you need to override these for a specific environment, create a custom values file:
+Create a `my-values.yaml` file:
 
 ```yaml
 # my-values.yaml
-rabbitMQ:
-  host: "rabbitmq.example.com"
-  port: "5672"
-  vhost: "/customvhost"
+api_host: "https://api.matildacloud.com"
+api_key: "your-api-key-here"
+id: "your-cluster-asset-id"
+
+# Optional: Override namespace
+namespace:
+  create: true
+  name: "matilda"
+
+# Optional: Resource limits
+resources:
+  limits:
+    cpu: 1000m
+    memory: 1Gi
+  requests:
+    cpu: 200m
+    memory: 256Mi
+
+# Optional: Global configuration
+global:
+  imageRegistry: "your-registry.com"
+  imagePullSecrets:
+    - name: your-registry-secret
+
+# Optional: Pod configuration
+podAnnotations:
+  prometheus.io/scrape: "true"
+  prometheus.io/port: "8080"
+podLabels:
+  environment: "production"
+
+# Optional: Advanced configuration
+nodeSelector:
+  kubernetes.io/os: linux
+tolerations:
+  - key: "node-role.kubernetes.io/master"
+    operator: "Exists"
+    effect: "NoSchedule"
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/arch
+          operator: In
+          values:
+          - amd64
 ```
 
 Then install with:
 
 ```bash
-helm install matilda-agent matilda/matilda-k8s-agent \
-  --set assetid=YOUR_ASSET_ID \
-  --set integrationid=YOUR_INTEGRATION_ID \
-  -f my-values.yaml
-```
-
-> **Note:** Do not pass RabbitMQ host/port/vhost as `--set` flags unless you need to override for a specific environment. The recommended approach is to use a custom values file for infrastructure configuration.
-
-### Creating Required Secrets
-
-#### Image Pull Secret
-```bash
-kubectl create secret docker-registry k8s-agent-docker-secret \
-  --docker-server=https://index.docker.io/v1/ \
-  --docker-username=your-username \
-  --docker-password=your-password
-```
-
-#### RabbitMQ Secret
-```bash
-kubectl create secret generic rabbitmq-secret \
-  --from-literal=username=your-rabbitmq-username \
-  --from-literal=password=your-rabbitmq-password
+helm install k8s-agent matilda/matilda-k8s-agent -f my-values.yaml
 ```
 
 ## Configuration
@@ -83,48 +104,81 @@ kubectl create secret generic rabbitmq-secret \
 
 | Parameter | Description | Example |
 |-----------|-------------|---------|
-| `assetid` | Asset ID for the Kubernetes cluster | `Uyqgpe8074kVtb4GuoFcFzp99k6hCf` |
-| `integrationid` | Integration ID for the agent | `xyz123` |
+| `api_host` | API host URL for Matilda Cloud | `https://api.matildacloud.com` |
+| `api_key` | API key for authentication | `abc123def456` |
+| `id` | Cluster asset ID | `cluster-12345` |
 
-### RabbitMQ Configuration
-
-| Parameter | Description | Default |
-|-----------|-------------|---------|
-| `rabbitMQ.host` | RabbitMQ server host/IP | `10.10.10.10` |
-| `rabbitMQ.port` | RabbitMQ server port | `32021` |
-| `rabbitMQ.vhost` | RabbitMQ virtual host | `/` |
-| `rabbitMQ.connectionTimeout` | Connection timeout (seconds) | `30` |
-| `rabbitMQ.heartbeat` | Heartbeat interval (seconds) | `60` |
-| `rabbitMQ.secret.name` | Name of existing RabbitMQ secret | `rabbitmq-secret` |
-| `rabbitMQ.secret.usernameKey` | Key for username in secret | `username` |
-| `rabbitMQ.secret.passwordKey` | Key for password in secret | `password` |
-
-### Security Configuration
+### Optional Parameters
 
 | Parameter | Description | Default |
 |-----------|-------------|---------|
-| `securityContext.enabled` | Enable pod security context | `true` |
-| `securityContext.runAsNonRoot` | Run as non-root user | `true` |
-| `securityContext.runAsUser` | User ID to run as | `1000` |
-| `containerSecurityContext.enabled` | Enable container security context | `true` |
-| `containerSecurityContext.readOnlyRootFilesystem` | Read-only root filesystem | `true` |
+| `namespace.create` | Create matilda namespace automatically | `true` |
+| `namespace.name` | Namespace name (automatically set to matilda) | `matilda` |
+| `replicaCount` | Number of replicas | `1` |
+| `image.repository` | Container image repository | `docker.io/matilda1/matilda-k8s-agent` |
+| `image.tag` | Container image tag | `latest` |
+| `image.pullPolicy` | Image pull policy | `IfNotPresent` |
+| `service.type` | Service type | `ClusterIP` |
+| `service.port` | Service port | `8080` |
+| `rbac.create` | Create RBAC resources | `true` |
+| `secret.create` | Create secret for sensitive data | `true` |
+| `serviceAccount.create` | Create service account | `true` |
+| `serviceAccount.name` | Service account name | `""` (auto-generated) |
+| `serviceAccount.annotations` | Service account annotations | `{}` |
+| `configMap.create` | Create configmap | `false` |
+| `configMap.name` | Configmap name | `""` (auto-generated) |
+
+### Global Configuration
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| `global.imageRegistry` | Global image registry | `""` |
+| `global.imagePullSecrets` | Global image pull secrets | `[]` |
+
+### Pod Configuration
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| `podAnnotations` | Pod annotations | `{}` |
+| `podLabels` | Pod labels | `{}` |
+| `podSecurityContext.fsGroup` | Pod security context fsGroup | `2000` |
+
+### Advanced Configuration
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| `nodeSelector` | Node selector | `{}` |
+| `tolerations` | Pod tolerations | `[]` |
+| `affinity` | Pod affinity | `{}` |
+| `nameOverride` | Name override | `""` |
+| `fullnameOverride` | Full name override | `""` |
+| `extraLabels` | Additional labels for all resources | `{}` |
+| `extraAnnotations` | Additional annotations for all resources | `{}` |
 
 ### Resource Configuration
 
 | Parameter | Description | Default |
 |-----------|-------------|---------|
-| `replicaCount` | Number of replicas | `2` |
 | `resources.limits.cpu` | CPU limit | `500m` |
 | `resources.limits.memory` | Memory limit | `512Mi` |
 | `resources.requests.cpu` | CPU request | `100m` |
 | `resources.requests.memory` | Memory request | `128Mi` |
 
+### Security Configuration
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| `securityContext.runAsNonRoot` | Run as non-root user | `true` |
+| `securityContext.runAsUser` | User ID to run as | `1000` |
+| `securityContext.readOnlyRootFilesystem` | Read-only root filesystem | `true` |
+| `securityContext.capabilities.drop` | Drop capabilities | `["ALL"]` |
+
 ## Security Features
 
 ### Secrets Management
-- RabbitMQ credentials stored in Kubernetes Secrets
-- assetid and integrationid encrypted in Secrets
-- Docker registry credentials secured
+- API key and cluster asset ID stored in Kubernetes Secrets
+- Sensitive data encrypted at rest
+- No hardcoded credentials in deployment manifests
 
 ### Pod Security
 - Non-root user execution (UID 1000)
@@ -141,30 +195,12 @@ kubectl create secret generic rabbitmq-secret \
 
 The agent receives the following environment variables:
 
-### RabbitMQ Configuration
-- `RABBIT_MQ_HOST`: RabbitMQ server host
-- `RABBIT_MQ_PORT`: RabbitMQ server port
-- `RABBIT_MQ_USER`: RabbitMQ username (from Secret)
-- `RABBIT_MQ_PASSWORD`: RabbitMQ password (from Secret)
-- `RABBIT_MQ_VHOST`: RabbitMQ virtual host
-- `RABBIT_MQ_CONNECTION_TIMEOUT`: Connection timeout
-- `RABBIT_MQ_HEARTBEAT`: Heartbeat interval
-
-### Asset Configuration
-- `CLUSTER_ASSET_ID`: assetid (from Secret)
-- `INTEGRATION_ID`: integrationid (from Secret)
-
-### Application Configuration
-- `APP_NAME`: Application name
-- `APP_VERSION`: Application version
-- `LOG_LEVEL`: Logging level
-- `LOG_FORMAT`: Logging format
+### API Configuration
+- `API_HOST`: API host URL (from values)
+- `API_KEY`: API key (from Secret)
+- `CLUSTER_ASSET_ID`: Cluster asset ID (from Secret)
 
 ## Monitoring
-
-### Health Probes
-- **Liveness Probe**: HTTP GET `/health` endpoint
-- **Readiness Probe**: HTTP GET `/ready` endpoint
 
 ### Resource Monitoring
 - CPU and memory usage tracking
@@ -175,43 +211,111 @@ The agent receives the following environment variables:
 
 ### Check Pod Status
 ```bash
-kubectl get pods -l app.kubernetes.io/name=matilda-k8s-agent
+kubectl get pods -l app.kubernetes.io/name=k8s-agent -n matilda
 ```
 
 ### View Logs
 ```bash
-kubectl logs -f deployment/matilda-agent -n default
+kubectl logs -f deployment/k8s-agent -n matilda
 ```
 
 ### Check Configuration
 ```bash
-# Verify ConfigMap
-kubectl get configmap matilda-agent-config -o yaml
+# Verify Secret
+kubectl get secret k8s-agent -n matilda -o yaml
 
-# Verify Secrets (base64 encoded)
-kubectl get secret matilda-agent-secret -o yaml
+# Verify Service
+kubectl get svc k8s-agent -n matilda
+
+# Verify RBAC
+kubectl get clusterrole k8s-agent-clusterrole
+kubectl get clusterrolebinding k8s-agent-clusterrolebinding
+
+# Verify Namespace
+kubectl get namespace matilda
 ```
 
 ### Common Issues
 
-1. **assetid not configured**
+1. **Missing required parameters**
    ```bash
-   helm upgrade matilda-agent matilda/matilda-k8s-agent --set assetid=YOUR_ASSET_ID
+   # Check if all required values are set
+   helm get values k8s-agent -n matilda
    ```
 
-2. **RabbitMQ connection failed**
-   - Verify RabbitMQ server is accessible (host/port/vhost in values file)
-   - Check credentials in the secret
-   - Verify network connectivity
+2. **Pod not starting**
+   ```bash
+   # Check pod events
+   kubectl describe pod -l app.kubernetes.io/name=k8s-agent -n matilda
+   ```
 
-3. **Pod security context issues**
-   - Ensure the image supports non-root execution
-   - Check if the user ID 1000 exists in the container
+3. **API connection issues**
+   - Verify API host URL is correct and accessible
+   - Check API key is valid
+   - Ensure network connectivity from cluster to API
+
+4. **Permission issues**
+   ```bash
+   # Check service account permissions
+   kubectl auth can-i get pods --as=system:serviceaccount:matilda:k8s-agent
+   ```
+
+## Advanced Configuration
+
+### Custom Image Registry
+
+```yaml
+# Using global configuration (recommended)
+global:
+  imageRegistry: "your-registry.com"
+  imagePullSecrets:
+    - name: your-registry-secret
+
+# Or using individual image configuration
+image:
+  repository: your-registry.com/matilda-k8s-agent
+  tag: "v1.0.0"
+  pullPolicy: Always
+
+imagePullSecrets:
+  - name: your-registry-secret
+```
+
+### Custom Resource Limits
+
+```yaml
+resources:
+  limits:
+    cpu: 2000m
+    memory: 2Gi
+  requests:
+    cpu: 500m
+    memory: 512Mi
+```
+
+### Custom Security Context
+
+```yaml
+securityContext:
+  runAsUser: 2000
+  runAsGroup: 2000
+  fsGroup: 2000
+  capabilities:
+    drop:
+    - ALL
+  readOnlyRootFilesystem: true
+```
 
 ## Uninstallation
 
 ```bash
-helm uninstall matilda-agent
+helm uninstall k8s-agent
+```
+
+To also remove the namespace:
+
+```bash
+kubectl delete namespace matilda
 ```
 
 ## Contributing
@@ -224,4 +328,4 @@ helm uninstall matilda-agent
 
 ## License
 
-This project is licensed under the MIT License. 
+This project is licensed under the MIT License.

@@ -1,18 +1,18 @@
 apiVersion: v2
+appVersion: "1.0.0"
+description: A Helm chart for Matilda Kubernetes Agent
 name: matilda-k8s-agent
-description: A Helm chart for Matilda Kubernetes Agent with secure configuration management
 type: application
 version: 0.1.0
-appVersion: "1.0.0"
 keywords:
   - kubernetes
   - agent
+  - matilda
   - monitoring
-  - discovery
-maintainers:
-  - name: Matilda Team
-    email: matilda@example.com
 home: https://github.com/matildacloud/helm-charts
 sources:
   - https://github.com/matildacloud/helm-charts
-kubeVersion: ">=1.19.0-0"
+maintainers:
+  - name: Matilda Cloud Team
+    email: support@matildacloud.com
+icon: https://raw.githubusercontent.com/kubernetes/kubernetes/master/logo/logo.png
