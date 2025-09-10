@@ -1,0 +1,65 @@
+1. Thanos has been deployed successfully!
+
+2. Get the application URL by running these commands:
+{{- if contains "NodePort" .Values.service.type }}
+  export NODE_PORT=$(kubectl get --namespace {{ .Values.namespace.name }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ include "thanos.query.fullname" . }})
+  export NODE_IP=$(kubectl get nodes --namespace {{ .Values.namespace.name }} -o jsonpath="{.items[0].status.addresses[0].address}")
+  echo http://$NODE_IP:$NODE_PORT
+{{- else if contains "LoadBalancer" .Values.service.type }}
+     NOTE: It may take a few minutes for the LoadBalancer IP to be available.
+           You can watch the status of by running 'kubectl get --namespace {{ .Values.namespace.name }} svc -w {{ include "thanos.query.fullname" . }}'
+  export SERVICE_IP=$(kubectl get svc --namespace {{ .Values.namespace.name }} {{ include "thanos.query.fullname" . }} --template "{{"{{ range (index .status.loadBalancer.ingress 0) }}{{.}}{{ end }}"}}")
+  echo http://$SERVICE_IP:{{ .Values.service.httpPort }}
+{{- else if contains "ClusterIP" .Values.service.type }}
+  export POD_NAME=$(kubectl get pods --namespace {{ .Values.namespace.name }} -l "app.kubernetes.io/name={{ include "thanos.query.name" . }},app.kubernetes.io/instance={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}")
+  export CONTAINER_PORT=$(kubectl get pod --namespace {{ .Values.namespace.name }} $POD_NAME -o jsonpath="{.spec.containers[0].ports[0].containerPort}")
+  echo "Visit http://127.0.0.1:8080 to use your application"
+  kubectl --namespace {{ .Values.namespace.name }} port-forward $POD_NAME 8080:$CONTAINER_PORT
+{{- end }}
+
+3. Thanos Query UI is available at the above URL.
+
+4. Thanos Store Gateway is available at:
+{{- if contains "NodePort" .Values.service.type }}
+  export STORE_NODE_PORT=$(kubectl get --namespace {{ .Values.namespace.name }} -o jsonpath="{.spec.ports[0].nodePort}" services thanos-store)
+  echo http://$NODE_IP:$STORE_NODE_PORT
+{{- else }}
+  kubectl --namespace {{ .Values.namespace.name }} port-forward svc/thanos-store 9091:{{ .Values.store.ports.http }}
+{{- end }}
+
+5. Thanos Receive is available at:
+{{- if contains "NodePort" .Values.service.type }}
+  export RECEIVE_NODE_PORT=$(kubectl get --namespace {{ .Values.namespace.name }} -o jsonpath="{.spec.ports[0].nodePort}" services thanos-receive-ingestor-default)
+  echo http://$NODE_IP:$RECEIVE_NODE_PORT
+{{- else }}
+  kubectl --namespace {{ .Values.namespace.name }} port-forward svc/thanos-receive-ingestor-default 9092:{{ .Values.receiveIngestor.ports.http }}
+{{- end }}
+
+{{- if .Values.ruler.enabled }}
+6. Thanos Ruler is available at:
+{{- if contains "NodePort" .Values.service.type }}
+  export RULER_NODE_PORT=$(kubectl get --namespace {{ .Values.namespace.name }} -o jsonpath="{.spec.ports[0].nodePort}" services thanos-ruler)
+  echo http://$NODE_IP:$RULER_NODE_PORT
+{{- else }}
+  kubectl --namespace {{ .Values.namespace.name }} port-forward svc/thanos-ruler 9093:{{ .Values.ruler.service.httpPort }}
+{{- end }}
+{{- end }}
+
+{{- if .Values.ruler.enabled }}
+7. {{- else }}
+6. {{- end }}IMPORTANT: S3 object storage secret '{{ include "thanos.objstore.secretName" . }}' must be created externally before deployment.
+   Create it using: kubectl create secret generic {{ include "thanos.objstore.secretName" . }} --from-file=thanos.yaml=thanos-s3-config.yaml -n {{ .Values.namespace.name }}
+
+{{- if .Values.ruler.enabled }}
+8. To check the status of all Thanos components:
+{{- else }}
+7. To check the status of all Thanos components:
+{{- end }}
+   kubectl get pods -n {{ .Values.namespace.name }}
+
+{{- if .Values.ruler.enabled }}
+9. To view logs:
+{{- else }}
+8. To view logs:
+{{- end }}
+   kubectl logs -n {{ .Values.namespace.name }} -l app.kubernetes.io/name={{ include "thanos.query.name" . }} --tail=100

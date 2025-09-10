@@ -45,6 +45,13 @@ podLabels: {}
 podSecurityContext:
   fsGroup: 2000
 
+# Network configuration
+network:
+  # Use host network (required for some monitoring scenarios)
+  hostNetwork: true
+  # DNS policy when using host network
+  dnsPolicy: ClusterFirstWithHostNet
+
 # Container security context
 securityContext:
   capabilities:

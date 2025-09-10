@@ -127,6 +127,8 @@ helm install matilda-k8s-agent matilda/matilda-k8s-agent \
 | `service.port` | Service port | `8080` |
 | `rbac.create` | Create RBAC resources | `true` |
 | `secret.create` | Create secret for sensitive data | `true` |
+| `network.hostNetwork` | Use host network for the pod | `true` |
+| `network.dnsPolicy` | DNS policy when using host network | `ClusterFirstWithHostNet` |
 | `serviceAccount.create` | Create service account | `true` |
 | `serviceAccount.name` | Service account name | `""` (auto-generated) |
 | `serviceAccount.annotations` | Service account annotations | `{}` |
@@ -195,6 +197,28 @@ helm install matilda-k8s-agent matilda/matilda-k8s-agent \
 - Optional RBAC creation with read-only permissions
 - Service account with minimal required permissions
 - Cluster-wide read access for discovery
+
+## Network Configuration
+
+The agent uses host networking by default, which provides several benefits:
+
+### Host Network Benefits
+- **Direct Node Access**: Agent can access node-level resources and metrics
+- **Simplified Networking**: Bypasses Kubernetes network policies for monitoring
+- **Better Performance**: Reduced network overhead for data collection
+- **Node Discovery**: Can discover and monitor all nodes in the cluster
+
+### Configuration Options
+```yaml
+network:
+  hostNetwork: true                    # Use host network (recommended)
+  dnsPolicy: ClusterFirstWithHostNet  # DNS resolution policy
+```
+
+### Security Considerations
+- **Privileged Access**: Host network provides broader access to node resources
+- **RBAC Required**: Ensure proper RBAC permissions are configured
+- **Network Policies**: May bypass some Kubernetes network policies
 
 ## Environment Variables
 

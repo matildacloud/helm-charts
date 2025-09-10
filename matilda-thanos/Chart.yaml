@@ -5,7 +5,7 @@ description: A Helm chart for deploying Thanos components on Kubernetes.
 type: application
 
 # Chart version (increment on changes to the chart or templates)
-version: 0.1.0
+version: 0.2.0
 
 # Application version (matches the Thanos app version you're deploying)
 appVersion: "v0.31.0"

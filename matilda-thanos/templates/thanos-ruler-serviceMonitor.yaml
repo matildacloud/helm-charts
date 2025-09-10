@@ -1,0 +1,20 @@
+{{- if and .Values.ruler.enabled .Values.ruler.serviceMonitor.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ .Values.ruler.serviceMonitor.name }}
+  namespace: {{ .Values.namespace.name }}
+  labels:
+    {{- include "thanos.common.labels" . | nindent 4 }}
+    app.kubernetes.io/component: ruler
+spec:
+  selector:
+    matchLabels:
+      {{- include "thanos.common.labels" . | nindent 6 }}
+      app.kubernetes.io/component: ruler
+  endpoints:
+  - port: {{ .Values.ruler.serviceMonitor.port }}
+    path: /metrics
+    interval: 30s
+    scrapeTimeout: 10s
+{{- end }}

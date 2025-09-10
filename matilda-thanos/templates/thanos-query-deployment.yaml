@@ -1,8 +1,11 @@
+{{- include "thanos.validations.namespace" . -}}
+{{- include "thanos.validations.image" . -}}
+{{- include "thanos.validations.resources" . -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: thanos-query
-  namespace: {{ .Values.namespace }}
+  namespace: {{ .Values.namespace.name }}
   labels:
     app.kubernetes.io/component: query-layer
     app.kubernetes.io/instance: thanos-query
@@ -39,9 +42,12 @@ spec:
             - --log.format=logfmt
             - --query.replica-label=prometheus_replica
             - --query.replica-label=rule_replica
-            - --endpoint=dnssrv+_grpc._tcp.thanos-store.thanos.svc.cluster.local:10901
-            - --endpoint=dnssrv+_grpc._tcp.thanos-receive-ingestor-default.thanos.svc.cluster.local:10901
-            - --store=dnssrv+_grpc._tcp.thanos-store.thanos.svc.cluster.local:10901
+            - --endpoint=dnssrv+_grpc._tcp.thanos-store.{{ .Values.namespace.name }}.svc.cluster.local:10901
+            - --endpoint=dnssrv+_grpc._tcp.thanos-receive-ingestor-default.{{ .Values.namespace.name }}.svc.cluster.local:10901
+            {{- if .Values.ruler.enabled }}
+            - --endpoint=dnssrv+_grpc._tcp.thanos-ruler.{{ .Values.namespace.name }}.svc.cluster.local:10901
+            {{- end }}
+            - --store=dnssrv+_grpc._tcp.thanos-store.{{ .Values.namespace.name }}.svc.cluster.local:10901
             - --store=dnssrv+_grpc._tcp.prometheus-kube-prometheus-thanos-discovery.prometheus.svc.cluster.local:10901
             - --query.auto-downsampling
           env:

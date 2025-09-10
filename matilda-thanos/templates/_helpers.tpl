@@ -52,3 +52,18 @@ app.kubernetes.io/part-of: {{ .Chart.Name }}
 thanos-receive
 {{- end -}}
 
+{{- define "thanos.common.labels" -}}
+app.kubernetes.io/name: {{ include "thanos.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+app.kubernetes.io/version: {{ .Chart.AppVersion }}
+app.kubernetes.io/part-of: {{ .Chart.Name }}
+{{- end -}}
+
+{{- define "thanos.name" -}}
+{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{- define "thanos.objstore.secretName" -}}
+{{- .Values.objstore.existingSecret -}}
+{{- end -}}
+

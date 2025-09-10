@@ -1,0 +1,23 @@
+{{- if .Values.ruler.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: thanos-ruler-rules
+  namespace: {{ .Values.namespace.name }}
+  labels:
+    {{- include "thanos.common.labels" . | nindent 4 }}
+    app.kubernetes.io/component: ruler
+data:
+  example-rules.yaml: |
+    groups:
+    - name: example
+      rules:
+      - alert: ExampleAlert
+        expr: up == 0
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Example alert"
+          description: "This is an example alert"
+{{- end }}

@@ -1,0 +1,24 @@
+{{- if .Values.ruler.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: thanos-ruler
+  namespace: {{ .Values.namespace.name }}
+  labels:
+    {{- include "thanos.common.labels" . | nindent 4 }}
+    app.kubernetes.io/component: ruler
+spec:
+  type: {{ .Values.ruler.service.type }}
+  ports:
+    - name: grpc
+      port: {{ .Values.ruler.service.grpcPort }}
+      targetPort: 10901
+      protocol: TCP
+    - name: http
+      port: {{ .Values.ruler.service.httpPort }}
+      targetPort: 10902
+      protocol: TCP
+  selector:
+    {{- include "thanos.common.labels" . | nindent 4 }}
+    app.kubernetes.io/component: ruler
+{{- end }}

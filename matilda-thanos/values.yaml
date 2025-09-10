@@ -1,11 +1,48 @@
-# Namespace for all Thanos components
-namespace: thanos
+# Namespace configuration
+namespace:
+  create: true
+  name: "thanos"
 
 # Global image configuration
 image:
   repository: quay.io/thanos/thanos
   tag: v0.31.0
   pullPolicy: IfNotPresent
+
+# Global image pull secrets
+imagePullSecrets: []
+
+# Name override for the application
+nameOverride: ""
+
+# Full name override for the application
+fullnameOverride: ""
+
+# Additional labels to add to all resources
+extraLabels: {}
+
+# Additional annotations to add to all resources
+extraAnnotations: {}
+
+# S3 Object Storage Configuration
+# IMPORTANT: S3 credentials should be created externally for security
+# Do not put sensitive credentials in values.yaml or Helm templates
+objstore:
+  # Existing secret name (REQUIRED - must be created externally)
+  existingSecret: "thanos-objstore"
+  # Secret key name in the secret
+  secretKey: "thanos.yaml"
+  # Example S3 configuration (for reference only - do not use real credentials)
+  exampleConfig: |
+    type: S3
+    config:
+      bucket: "your-s3-bucket-name"
+      endpoint: "s3.amazonaws.com"
+      region: "us-east-1"
+      access_key: "your-access-key"
+      secret_key: "your-secret-key"
+      insecure: false
+      signature_version2: false
 
 # Global service configuration
 service:
@@ -97,6 +134,30 @@ receiveStatefulSet:
   serviceAccountName: thanos-receive-v2
   storage: 10Gi
   storageClassName: local-path
+  affinity: {}
+  nodeSelector: {}
+
+# Ruler component configuration
+ruler:
+  enabled: false
+  replicaCount: 1
+  service:
+    type: ClusterIP
+    grpcPort: 10901
+    httpPort: 10902
+  serviceAccount:
+    name: thanos-ruler
+  serviceMonitor:
+    enabled: true
+    name: thanos-ruler-servicemonitor
+    port: http
+  resources:
+    limits:
+      cpu: 500m
+      memory: 1Gi
+    requests:
+      cpu: 200m
+      memory: 512Mi
   affinity: {}
   nodeSelector: {}
 

@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: thanos-receive
-  namespace: {{ .Values.namespace }}
+  namespace: {{ .Values.namespace.name }}
   labels:
     app.kubernetes.io/component: receive-ingestor
     app.kubernetes.io/instance: thanos-receive

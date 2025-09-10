@@ -1,0 +1,104 @@
+{{- if .Values.ruler.enabled }}
+{{- include "thanos.validations.namespace" . -}}
+{{- include "thanos.validations.image" . -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: thanos-ruler
+  namespace: {{ .Values.namespace.name }}
+  labels:
+    {{- include "thanos.common.labels" . | nindent 4 }}
+    app.kubernetes.io/component: ruler
+spec:
+  replicas: {{ .Values.ruler.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "thanos.common.labels" . | nindent 6 }}
+      app.kubernetes.io/component: ruler
+  template:
+    metadata:
+      labels:
+        {{- include "thanos.common.labels" . | nindent 8 }}
+        app.kubernetes.io/component: ruler
+    spec:
+      serviceAccountName: {{ .Values.ruler.serviceAccount.name }}
+      securityContext:
+        fsGroup: 65534
+        runAsGroup: 65532
+        runAsNonRoot: true
+        runAsUser: 65534
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: thanos-ruler
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args:
+            - rule
+            - --log.level=info
+            - --log.format=logfmt
+            - --grpc-address=0.0.0.0:10901
+            - --http-address=0.0.0.0:10902
+            - --objstore.config=$(OBJSTORE_CONFIG)
+            - --query=dnssrv+_grpc._tcp.thanos-query.{{ .Values.namespace.name }}.svc.cluster.local:10901
+            - --rule-file=/etc/thanos/rules/*.yaml
+            - --data-dir=/var/thanos/ruler
+            - --label=thanos_ruler_replica
+            - --label=rule_replica
+          env:
+            - name: OBJSTORE_CONFIG
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "thanos.objstore.secretName" . }}
+                  key: {{ .Values.objstore.secretKey }}
+          ports:
+            - name: grpc
+              containerPort: 10901
+            - name: http
+              containerPort: 10902
+          volumeMounts:
+            - name: rules
+              mountPath: /etc/thanos/rules
+            - name: data
+              mountPath: /var/thanos/ruler
+          livenessProbe:
+            httpGet:
+              path: /-/healthy
+              port: 10902
+              scheme: HTTP
+            periodSeconds: 30
+            failureThreshold: 8
+          readinessProbe:
+            httpGet:
+              path: /-/ready
+              port: 10902
+              scheme: HTTP
+            periodSeconds: 5
+            failureThreshold: 20
+          resources:
+            {{- toYaml .Values.ruler.resources | nindent 12 }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+            readOnlyRootFilesystem: true
+            runAsGroup: 65532
+            runAsNonRoot: true
+            runAsUser: 65534
+            seccompProfile:
+              type: RuntimeDefault
+      volumes:
+        - name: rules
+          configMap:
+            name: thanos-ruler-rules
+        - name: data
+          emptyDir: {}
+      {{- with .Values.ruler.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.ruler.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}
