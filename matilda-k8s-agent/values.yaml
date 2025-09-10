@@ -26,6 +26,8 @@ imagePullSecrets: []
   # - name: myregistrykey
 
 # Namespace configuration - defaults to matilda
+# NOTE: This creates the namespace but doesn't control where the chart is installed.
+# Use --namespace matilda --create-namespace during helm install to deploy in this namespace.
 namespace:
   create: true
   name: "matilda"

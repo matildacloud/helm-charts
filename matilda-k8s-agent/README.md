@@ -32,6 +32,8 @@ helm repo update
 
 # Install with required parameters (namespace will be created automatically)
 helm install matilda-k8s-agent matilda/matilda-k8s-agent \
+  --namespace matilda \
+  --create-namespace \
   --set api_host=https://api.matildacloud.com \
   --set api_key=YOUR_API_KEY \
   --set id=YOUR_CLUSTER_ASSET_ID
@@ -95,7 +97,10 @@ affinity:
 Then install with:
 
 ```bash
-helm install matilda-k8s-agent matilda/matilda-k8s-agent -f my-values.yaml
+helm install matilda-k8s-agent matilda/matilda-k8s-agent \
+  --namespace matilda \
+  --create-namespace \
+  -f my-values.yaml
 ```
 
 ## Configuration
