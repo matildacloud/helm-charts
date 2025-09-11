@@ -32,8 +32,6 @@ helm repo update
 
 # Install with required parameters (namespace will be created automatically)
 helm install matilda-k8s-agent matilda/matilda-k8s-agent \
-  --namespace matilda \
-  --create-namespace \
   --set api_host=https://api.matildacloud.com \
   --set api_key=YOUR_API_KEY \
   --set id=YOUR_CLUSTER_ASSET_ID
@@ -240,28 +238,28 @@ The agent receives the following environment variables:
 
 ### Check Pod Status
 ```bash
-kubectl get pods -l app.kubernetes.io/name=matilda-k8s-agent -n matilda
+kubectl get pods -l app.kubernetes.io/name=matilda-k8s-agent -n matilda-k8s-agent
 ```
 
 ### View Logs
 ```bash
-kubectl logs -f deployment/matilda-k8s-agent -n matilda
+kubectl logs -f deployment/matilda-k8s-agent -n matilda-k8s-agent
 ```
 
 ### Check Configuration
 ```bash
 # Verify Secret
-kubectl get secret matilda-k8s-agent -n matilda -o yaml
+kubectl get secret matilda-k8s-agent -n matilda-k8s-agent -o yaml
 
 # Verify Service
-kubectl get svc matilda-k8s-agent -n matilda
+kubectl get svc matilda-k8s-agent -n matilda-k8s-agent
 
 # Verify RBAC
 kubectl get clusterrole matilda-k8s-agent-clusterrole
 kubectl get clusterrolebinding matilda-k8s-agent-clusterrolebinding
 
 # Verify Namespace
-kubectl get namespace matilda
+kubectl get namespace matilda-k8s-agent
 ```
 
 ### Common Issues
@@ -275,7 +273,7 @@ kubectl get namespace matilda
 2. **Pod not starting**
    ```bash
    # Check pod events
-   kubectl describe pod -l app.kubernetes.io/name=matilda-k8s-agent -n matilda
+   kubectl describe pod -l app.kubernetes.io/name=matilda-k8s-agent -n matilda-k8s-agent
    ```
 
 3. **API connection issues**
@@ -286,7 +284,7 @@ kubectl get namespace matilda
 4. **Permission issues**
    ```bash
    # Check service account permissions
-   kubectl auth can-i get pods --as=system:serviceaccount:matilda:matilda-k8s-agent
+   kubectl auth can-i get pods --as=system:serviceaccount:matilda-k8s-agent:matilda-k8s-agent
    ```
 
 ## Advanced Configuration
@@ -344,7 +342,7 @@ helm uninstall matilda-k8s-agent
 To also remove the namespace:
 
 ```bash
-kubectl delete namespace matilda
+kubectl delete namespace matilda-k8s-agent
 ```
 
 ## Contributing
