@@ -26,5 +26,5 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: {{ include "matilda-k8s-agent.serviceAccountName" . }}
-    namespace: {{ .Release.Namespace }}
+    namespace: {{ .Values.namespace.name | default .Release.Namespace }}
 {{- end }}

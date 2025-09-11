@@ -25,12 +25,13 @@ image:
 imagePullSecrets: []
   # - name: myregistrykey
 
-# Namespace configuration - defaults to matilda
-# NOTE: This creates the namespace but doesn't control where the chart is installed.
-# Use --namespace matilda --create-namespace during helm install to deploy in this namespace.
+# Namespace configuration
+# If namespace.name is defined, all resources will be deployed to that namespace.
+# If namespace.name is empty or not defined, resources will be deployed to the namespace specified during helm install.
+# Set namespace.create to true to create the namespace resource (only if namespace.name is defined).
 namespace:
   create: true
-  name: "matilda"
+  name: "matilda-k8s-agent"  # Set to "" to use helm install namespace instead
 
 # Number of replicas
 replicaCount: 1
