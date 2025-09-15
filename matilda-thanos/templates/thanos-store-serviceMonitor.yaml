@@ -8,7 +8,7 @@ metadata:
     app.kubernetes.io/component: object-store-gateway
     app.kubernetes.io/instance: thanos-store
     app.kubernetes.io/name: thanos-store
-    app.kubernetes.io/version: {{ .Values.store.image.tag }}
+    app.kubernetes.io/version: {{ .Values.image.tag }}
 spec:
   endpoints:
     - port: {{ .Values.store.serviceMonitor.port }}

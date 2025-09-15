@@ -8,7 +8,7 @@ metadata:
     app.kubernetes.io/component: receive-ingestor
     app.kubernetes.io/instance: thanos-receive
     app.kubernetes.io/name: thanos-receive
-    app.kubernetes.io/version: {{ .Values.receiveIngestor.image.tag }}
+    app.kubernetes.io/version: {{ .Values.image.tag }}
 spec:
   endpoints:
     - port: {{ .Values.receiveIngestor.serviceMonitor.port }}

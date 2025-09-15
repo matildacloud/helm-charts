@@ -32,17 +32,6 @@ objstore:
   existingSecret: "thanos-objstore"
   # Secret key name in the secret
   secretKey: "thanos.yaml"
-  # Example S3 configuration (for reference only - do not use real credentials)
-  exampleConfig: |
-    type: S3
-    config:
-      bucket: "your-s3-bucket-name"
-      endpoint: "s3.amazonaws.com"
-      region: "us-east-1"
-      access_key: "your-access-key"
-      secret_key: "your-secret-key"
-      insecure: false
-      signature_version2: false
 
 # Global service configuration
 service:

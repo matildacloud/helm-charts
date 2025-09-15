@@ -11,10 +11,53 @@ This chart deploys a complete Thanos stack including:
 
 ## Prerequisites
 
-- Kubernetes 1.19+
-- Helm 3.2.0+
-- An existing S3-compatible object storage bucket
-- Prometheus Operator (optional, for ServiceMonitor resources)
+### Required Before Installation
+
+**⚠️ IMPORTANT**: The following prerequisites MUST be completed before running the Helm install command:
+
+#### 1. Kubernetes Cluster
+- **Kubernetes version**: 1.19 or higher
+- **Cluster access**: `kubectl` configured and working
+- **Namespace**: Target namespace should exist or be created during installation
+
+#### 2. Helm Installation
+- **Helm version**: 3.2.0 or higher
+- **Helm repository**: Matilda Cloud Helm repository added
+
+#### 3. S3-Compatible Object Storage
+- **Bucket**: An existing S3-compatible bucket (AWS S3, MinIO, etc.)
+- **Access credentials**: Valid access key and secret key
+- **Permissions**: Bucket must allow read/write operations
+- **Network access**: Cluster must be able to reach the S3 endpoint
+
+#### 4. Storage Infrastructure
+- **Storage Classes**: Appropriate storage classes configured in your cluster
+- **Persistent Volumes**: Sufficient storage capacity for:
+  - Store component: 10Gi (configurable)
+  - Receive component: 10Gi (configurable)
+- **Storage Classes**: Default storage class available or specify custom ones
+
+#### 5. S3 Secret Creation (CRITICAL)
+- **External secret**: S3 credentials must be created as a Kubernetes secret BEFORE Helm installation
+- **Secret name**: Must match `objstore.existingSecret` value
+- **Secret format**: Must contain S3 configuration in YAML format
+
+#### 6. Optional Prerequisites
+- **Prometheus Operator**: For ServiceMonitor resources (if monitoring is needed)
+- **RBAC**: Cluster admin permissions for creating ServiceAccounts and ClusterRoles
+- **Network Policies**: If using network policies for additional security
+
+### Pre-Installation Checklist
+
+Before running `helm install`, verify:
+
+- [ ] Kubernetes cluster is accessible (`kubectl get nodes`)
+- [ ] Helm is installed and working (`helm version`)
+- [ ] S3 bucket exists and is accessible
+- [ ] S3 secret is created in the target namespace
+- [ ] Storage classes are available (`kubectl get storageclass`)
+- [ ] Sufficient cluster resources (CPU/Memory) for Thanos components
+- [ ] Network connectivity to S3 endpoint from cluster
 
 ## Installation
 
