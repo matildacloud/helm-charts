@@ -3,7 +3,7 @@ entries:
   matilda-k8s-agent:
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2025-09-15T11:09:58.7366982-05:00"
+    created: "2025-10-06T11:27:04.5574386-05:00"
     description: A Helm chart for Matilda Kubernetes Agent
     digest: 69eebb378db9b08c24eebcd29a1a976ad9ab86a4657f917a90e8ef1245e03e5d
     home: https://github.com/matildacloud/helm-charts
@@ -21,12 +21,31 @@ entries:
     - https://github.com/matildacloud/helm-charts
     type: application
     urls:
-    - https://matildacloud.github.io/helm-charts/matilda-k8s-agent-0.3.0.tgz
+    - matilda-k8s-agent-0.3.0.tgz
     version: 0.3.0
   matilda-k8s-svc:
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2025-09-15T11:09:58.738356-05:00"
+    created: "2025-10-06T11:27:04.5759324-05:00"
+    description: A Helm chart for creating a service account with read-only permissions
+      and generating kubeconfig with non-expiring token
+    digest: 41934641ca2a23a93128e149386fc982a1b4023e166bc04de4639c95e6604bf2
+    keywords:
+    - kubernetes
+    - service-account
+    - kubeconfig
+    - read-only
+    maintainers:
+    - email: githubadmin@matildacloud.com
+      name: Matilda Team
+    name: matilda-k8s-svc
+    type: application
+    urls:
+    - matilda-k8s-svc-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2025-10-06T11:27:04.5741692-05:00"
     description: A Helm chart for creating a service account with read-only permissions
       and generating kubeconfig with non-expiring token
     digest: 0a737beb7b8477e45fd3535acb69808ac239780c41bbdf40edf3ffc7843e27e5
@@ -41,30 +60,30 @@ entries:
     name: matilda-k8s-svc
     type: application
     urls:
-    - https://matildacloud.github.io/helm-charts/matilda-k8s-svc-0.1.0.tgz
+    - matilda-k8s-svc-0.1.0.tgz
     version: 0.1.0
   matilda-thanos:
   - apiVersion: v2
     appVersion: v0.31.0
-    created: "2025-09-15T11:09:58.7464904-05:00"
+    created: "2025-10-06T11:27:04.6327622-05:00"
     description: A Helm chart for deploying Thanos components on Kubernetes.
     digest: 27b0ed69781a138cc5bab332c1ee5c246ec14a9664b649f93aad4c7f63d36b72
     icon: https://raw.githubusercontent.com/thanos-io/thanos/master/docs/icon/thanos-logo.png
     name: matilda-thanos
     type: application
     urls:
-    - https://matildacloud.github.io/helm-charts/matilda-thanos-0.2.1.tgz
+    - matilda-thanos-0.2.1.tgz
     version: 0.2.1
   - apiVersion: v2
     appVersion: v0.31.0
-    created: "2025-09-15T11:09:58.7405431-05:00"
+    created: "2025-10-06T11:27:04.6134804-05:00"
     description: A Helm chart for deploying Thanos components on Kubernetes.
     digest: 0775282241cf564ad811b014f7d2b659143a579074bc142403fdb4b1b79e2ae2
     icon: https://raw.githubusercontent.com/thanos-io/thanos/master/docs/icon/thanos-logo.png
     name: matilda-thanos
     type: application
     urls:
-    - https://matildacloud.github.io/helm-charts/matilda-thanos-0.1.0.tgz
+    - matilda-thanos-0.1.0.tgz
     version: 0.1.0
   prometheus:
   - annotations:
@@ -76,7 +95,7 @@ entries:
           url: https://github.com/prometheus/prometheus
     apiVersion: v2
     appVersion: v3.3.1
-    created: "2025-09-15T11:09:58.7585182-05:00"
+    created: "2025-10-06T11:27:04.6847035-05:00"
     dependencies:
     - condition: alertmanager.enabled
       name: alertmanager
@@ -127,6 +146,6 @@ entries:
     - https://github.com/kubernetes/kube-state-metrics
     type: application
     urls:
-    - https://matildacloud.github.io/helm-charts/prometheus-27.14.0.tgz
+    - prometheus-27.14.0.tgz
     version: 27.14.0
-generated: "2025-09-15T11:09:58.7344246-05:00"
+generated: "2025-10-06T11:27:04.5298104-05:00"
