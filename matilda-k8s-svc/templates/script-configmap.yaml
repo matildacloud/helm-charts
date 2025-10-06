@@ -32,7 +32,7 @@ data:
 
     # Get cluster CA certificate
     echo "Getting cluster CA certificate..."
-    CA_CERT=$(kubectl config view --minify -o jsonpath='{.clusters[0].cluster.certificate-authority-data}')
+    CA_CERT=$(kubectl config view --minify --raw -o jsonpath='{.clusters[0].cluster.certificate-authority-data}')
 
     # Create kubeconfig
     echo "Creating kubeconfig file: $OUTPUT_FILE"
