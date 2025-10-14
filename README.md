@@ -9,6 +9,28 @@ helm search repo matilda
 
 ## Available Charts
 
+### matilda-prometheus-stack
+A comprehensive monitoring solution for Kubernetes clusters, providing Prometheus, AlertManager, Grafana, and supporting components with Matilda Cloud integration.
+
+**Features:**
+- **Complete Monitoring Stack**: Prometheus, AlertManager, Grafana, Kube State Metrics, Node Exporter
+- **Prometheus Operator**: Easy management of Prometheus instances and monitoring configuration
+- **Production Ready**: Resource limits, security contexts, and persistent storage
+- **Highly Configurable**: Extensive customization options for all components
+- **RBAC Support**: Proper Kubernetes RBAC configuration
+- **Grafana Dashboards**: Pre-configured dashboards for Kubernetes monitoring
+
+**Quick Start:**
+```bash
+# Install with default configuration
+helm install matilda-prometheus matilda/matilda-prometheus-stack
+
+# Install with custom namespace
+helm install matilda-prometheus matilda/matilda-prometheus-stack \
+  --namespace monitoring \
+  --create-namespace
+```
+
 ### matilda-k8s-svc
 A Helm chart for creating a Kubernetes service account with read-only permissions and generating kubeconfig.
 
