@@ -43,6 +43,27 @@ entries:
     urls:
     - matilda-k8s-svc-0.1.1.tgz
     version: 0.1.1
+  matilda-prometheus-stack:
+  - apiVersion: v2
+    appVersion: v3.3.1
+    created: "2025-01-27T12:00:00.0000000-05:00"
+    description: Matilda Cloud Prometheus Stack - A comprehensive monitoring solution with Prometheus, AlertManager, and Grafana
+    digest: 0000000000000000000000000000000000000000000000000000000000000000
+    keywords:
+    - monitoring
+    - prometheus
+    - alertmanager
+    - grafana
+    - matilda
+    - stack
+    maintainers:
+    - email: githubadmin@matildacloud.com
+      name: Matilda Cloud Team
+    name: matilda-prometheus-stack
+    type: application
+    urls:
+    - matilda-prometheus-stack-0.1.0.tgz
+    version: 0.1.0
   - apiVersion: v2
     appVersion: 1.0.0
     created: "2025-10-06T11:27:04.5741692-05:00"
@@ -85,67 +106,4 @@ entries:
     urls:
     - matilda-thanos-0.1.0.tgz
     version: 0.1.0
-  prometheus:
-  - annotations:
-      artifacthub.io/license: Apache-2.0
-      artifacthub.io/links: |
-        - name: Chart Source
-          url: https://github.com/prometheus-community/helm-charts
-        - name: Upstream Project
-          url: https://github.com/prometheus/prometheus
-    apiVersion: v2
-    appVersion: v3.3.1
-    created: "2025-10-06T11:27:04.6847035-05:00"
-    dependencies:
-    - condition: alertmanager.enabled
-      name: alertmanager
-      repository: https://prometheus-community.github.io/helm-charts
-      version: 1.18.*
-    - condition: kube-state-metrics.enabled
-      name: kube-state-metrics
-      repository: https://prometheus-community.github.io/helm-charts
-      version: 5.33.*
-    - condition: prometheus-node-exporter.enabled
-      name: prometheus-node-exporter
-      repository: https://prometheus-community.github.io/helm-charts
-      version: 4.46.*
-    - condition: prometheus-pushgateway.enabled
-      name: prometheus-pushgateway
-      repository: https://prometheus-community.github.io/helm-charts
-      version: 3.2.*
-    description: Prometheus is a monitoring system and time series database.
-    digest: 33074e73dbdf3dcca51eecfb5f28bd89f8c5ba0a1ff20c9e8069384cb29b3b25
-    home: https://prometheus.io/
-    icon: https://raw.githubusercontent.com/prometheus/prometheus.github.io/master/assets/prometheus_logo-cb55bb5c346.png
-    keywords:
-    - monitoring
-    - prometheus
-    kubeVersion: '>=1.19.0-0'
-    maintainers:
-    - email: gianrubio@gmail.com
-      name: gianrubio
-      url: https://github.com/gianrubio
-    - email: zanhsieh@gmail.com
-      name: zanhsieh
-      url: https://github.com/zanhsieh
-    - email: miroslav.hadzhiev@gmail.com
-      name: Xtigyro
-      url: https://github.com/Xtigyro
-    - email: naseem@transit.app
-      name: naseemkullah
-      url: https://github.com/naseemkullah
-    - email: rootsandtrees@posteo.de
-      name: zeritti
-      url: https://github.com/zeritti
-    name: prometheus
-    sources:
-    - https://github.com/prometheus/alertmanager
-    - https://github.com/prometheus/prometheus
-    - https://github.com/prometheus/pushgateway
-    - https://github.com/prometheus/node_exporter
-    - https://github.com/kubernetes/kube-state-metrics
-    type: application
-    urls:
-    - prometheus-27.14.0.tgz
-    version: 27.14.0
-generated: "2025-10-06T11:27:04.5298104-05:00"
+generated: "2025-01-27T12:00:00.0000000-05:00"
