@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: {{ include "matilda-k8s-agent.fullname" . }}-network-agent
+  namespace: {{ .Values.namespace.name | default .Release.Namespace }}
   labels:
     {{- include "matilda-k8s-agent.labels" . | nindent 4 }}
     app.kubernetes.io/component: network-agent
@@ -75,6 +76,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ include "matilda-k8s-agent.fullname" . }}-network-agent
+  namespace: {{ .Values.namespace.name | default .Release.Namespace }}
   labels:
     {{- include "matilda-k8s-agent.labels" . | nindent 4 }}
     app.kubernetes.io/component: network-agent
