@@ -83,7 +83,7 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
-  - port: {{ .Values.service.port }}
+  - port: {{ .Values.service.daemonset.port }}
     targetPort: metrics
     protocol: TCP
     name: metrics

@@ -3,7 +3,32 @@ entries:
   matilda-k8s-agent:
   - apiVersion: v2
     appVersion: v2
-    created: "2025-10-23T13:21:33.3306406-05:00"
+    created: "2025-10-23T13:30:01.22747-05:00"
+    description: A Helm chart for Matilda Kubernetes Agent with network monitoring
+      capabilities
+    digest: 2fecbd6dd4855815d15fc133d92c7af80ebd426c495681f3016c4329eabf9b0d
+    home: https://github.com/matildacloud/helm-charts
+    icon: https://raw.githubusercontent.com/kubernetes/kubernetes/master/logo/logo.png
+    keywords:
+    - kubernetes
+    - agent
+    - matilda
+    - monitoring
+    - network
+    - daemonset
+    maintainers:
+    - email: support@matildacloud.com
+      name: Matilda Cloud Team
+    name: matilda-k8s-agent
+    sources:
+    - https://github.com/matildacloud/helm-charts
+    type: application
+    urls:
+    - https://matildacloud.github.io/helm-charts/matilda-k8s-agent-0.4.3.tgz
+    version: 0.4.3
+  - apiVersion: v2
+    appVersion: v2
+    created: "2025-10-23T13:30:01.2258661-05:00"
     description: A Helm chart for Matilda Kubernetes Agent with network monitoring
       capabilities
     digest: 7d5903bc1e9bbe7bc25218ca72ef794df02e88952b5b96192d11aa3ed15ee865
@@ -28,7 +53,7 @@ entries:
     version: 0.4.2
   - apiVersion: v2
     appVersion: v2
-    created: "2025-10-23T13:21:33.3289011-05:00"
+    created: "2025-10-23T13:30:01.2226025-05:00"
     description: A Helm chart for Matilda Kubernetes Agent with network monitoring
       capabilities
     digest: 6e647cc25ee4a1bbb2cdcb795e03b1487eedb9477938c73e0b6045e4b41586f4
@@ -53,7 +78,7 @@ entries:
     version: 0.4.1
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2025-10-23T13:21:33.3269578-05:00"
+    created: "2025-10-23T13:30:01.2208964-05:00"
     description: A Helm chart for Matilda Kubernetes Agent with network monitoring
       capabilities
     digest: e065d4d6e9d9e8da954021c64c48c16440d889a01aa8742a0c88098fd277f19e
@@ -78,7 +103,7 @@ entries:
     version: 0.4.0
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2025-10-23T13:21:33.3258279-05:00"
+    created: "2025-10-23T13:30:01.2197189-05:00"
     description: A Helm chart for Matilda Kubernetes Agent
     digest: 69eebb378db9b08c24eebcd29a1a976ad9ab86a4657f917a90e8ef1245e03e5d
     home: https://github.com/matildacloud/helm-charts
@@ -101,7 +126,7 @@ entries:
   matilda-k8s-svc:
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2025-10-23T13:21:33.3333303-05:00"
+    created: "2025-10-23T13:30:01.2303453-05:00"
     description: A Helm chart for creating a service account with read-only permissions
       and generating kubeconfig with non-expiring token
     digest: 41934641ca2a23a93128e149386fc982a1b4023e166bc04de4639c95e6604bf2
@@ -120,7 +145,7 @@ entries:
     version: 0.1.1
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2025-10-23T13:21:33.3317101-05:00"
+    created: "2025-10-23T13:30:01.2286572-05:00"
     description: A Helm chart for creating a service account with read-only permissions
       and generating kubeconfig with non-expiring token
     digest: 0a737beb7b8477e45fd3535acb69808ac239780c41bbdf40edf3ffc7843e27e5
@@ -150,7 +175,7 @@ entries:
       artifacthub.io/operator: "true"
     apiVersion: v2
     appVersion: v0.86.0
-    created: "2025-10-23T13:21:33.4078523-05:00"
+    created: "2025-10-23T13:30:01.300516-05:00"
     dependencies:
     - condition: crds.enabled
       name: crds
@@ -220,7 +245,7 @@ entries:
   matilda-thanos:
   - apiVersion: v2
     appVersion: v0.31.0
-    created: "2025-10-23T13:21:33.4120013-05:00"
+    created: "2025-10-23T13:30:01.3056804-05:00"
     description: A Helm chart for deploying Thanos components on Kubernetes.
     digest: 27b0ed69781a138cc5bab332c1ee5c246ec14a9664b649f93aad4c7f63d36b72
     icon: https://raw.githubusercontent.com/thanos-io/thanos/master/docs/icon/thanos-logo.png
@@ -231,7 +256,7 @@ entries:
     version: 0.2.1
   - apiVersion: v2
     appVersion: v0.31.0
-    created: "2025-10-23T13:21:33.4098542-05:00"
+    created: "2025-10-23T13:30:01.3035101-05:00"
     description: A Helm chart for deploying Thanos components on Kubernetes.
     digest: 0775282241cf564ad811b014f7d2b659143a579074bc142403fdb4b1b79e2ae2
     icon: https://raw.githubusercontent.com/thanos-io/thanos/master/docs/icon/thanos-logo.png
@@ -250,7 +275,7 @@ entries:
           url: https://github.com/prometheus/prometheus
     apiVersion: v2
     appVersion: v3.3.1
-    created: "2025-10-23T13:21:33.4231997-05:00"
+    created: "2025-10-23T13:30:01.320683-05:00"
     dependencies:
     - condition: alertmanager.enabled
       name: alertmanager
@@ -303,4 +328,4 @@ entries:
     urls:
     - https://matildacloud.github.io/helm-charts/prometheus-27.14.0.tgz
     version: 27.14.0
-generated: "2025-10-23T13:21:33.3235937-05:00"
+generated: "2025-10-23T13:30:01.2173849-05:00"
