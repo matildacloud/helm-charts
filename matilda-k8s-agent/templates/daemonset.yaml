@@ -1,0 +1,90 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: {{ include "matilda-k8s-agent.fullname" . }}-network-agent
+  labels:
+    {{- include "matilda-k8s-agent.labels" . | nindent 4 }}
+    app.kubernetes.io/component: network-agent
+spec:
+  selector:
+    matchLabels:
+      {{- include "matilda-k8s-agent.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: network-agent
+  template:
+    metadata:
+      labels:
+        {{- include "matilda-k8s-agent.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: network-agent
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "matilda-k8s-agent.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- if .Values.network.hostNetwork }}
+      hostNetwork: {{ .Values.network.hostNetwork }}
+      {{- end }}
+      {{- if .Values.network.dnsPolicy }}
+      dnsPolicy: {{ .Values.network.dnsPolicy }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+      - name: network-agent
+        image: "{{ .Values.image.daemonset.repository }}:{{ .Values.image.daemonset.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.image.daemonset.pullPolicy }}
+        securityContext:
+          {{- toYaml .Values.securityContext | nindent 10 }}
+          privileged: true
+        ports:
+        - name: metrics
+          containerPort: 9184
+          protocol: TCP
+        {{- with .Values.resources }}
+        resources:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        env:
+        - name: API_HOST
+          value: {{ .Values.api_host | quote }}
+        - name: API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "matilda-k8s-agent.secretName" . }}
+              key: api-key
+        - name: CLUSTER_ID
+          value: {{ .Values.id | quote }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "matilda-k8s-agent.fullname" . }}-network-agent
+  labels:
+    {{- include "matilda-k8s-agent.labels" . | nindent 4 }}
+    app.kubernetes.io/component: network-agent
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+  - port: {{ .Values.service.port }}
+    targetPort: metrics
+    protocol: TCP
+    name: metrics
+  selector:
+    {{- include "matilda-k8s-agent.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: network-agent

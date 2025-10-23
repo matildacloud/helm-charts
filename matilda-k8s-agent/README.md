@@ -1,19 +1,22 @@
 # K8s Agent Helm Chart
 
-A Helm chart for deploying the Matilda Kubernetes Agent with secure configuration management and API integration.
+A Helm chart for deploying the Matilda Kubernetes Agent with secure configuration management, API integration, and network monitoring capabilities.
 
-**Chart Version:** 0.1.0  
-**App Version:** 1.0.0
+**Chart Version:** 0.4.1  
+**App Version:** v2
 
 ## Features
 
+- **Dual Deployment**: Main agent deployment + network monitoring daemonset
 - **Secure Configuration**: Sensitive data stored in Kubernetes Secrets
 - **API Integration**: Configurable API host and authentication
 - **Asset Management**: Dynamic asset ID configuration
+- **Network Monitoring**: DaemonSet for comprehensive network packet analysis
 - **Security Hardened**: Non-root execution, read-only filesystem, dropped capabilities
 - **Resource Management**: Configurable CPU and memory limits
 - **RBAC Support**: Optional RBAC creation with read-only permissions
 - **Namespace Management**: Automatic creation of matilda namespace
+- **Host Network Support**: Optional host networking for enhanced monitoring capabilities
 
 ## Prerequisites
 
@@ -118,9 +121,12 @@ helm install matilda-k8s-agent matilda/matilda-k8s-agent \
 | `namespace.create` | Create matilda namespace automatically | `true` |
 | `namespace.name` | Namespace name (automatically set to matilda) | `matilda` |
 | `replicaCount` | Number of replicas | `1` |
-| `image.repository` | Container image repository | `docker.io/matilda1/matilda-k8s-agent` |
-| `image.tag` | Container image tag | `latest` |
-| `image.pullPolicy` | Image pull policy | `IfNotPresent` |
+| `image.repository` | Main agent container image repository | `docker.io/matilda1/matilda-k8s-agent` |
+| `image.tag` | Main agent container image tag | `v2` |
+| `image.pullPolicy` | Main agent image pull policy | `IfNotPresent` |
+| `image.daemonset.repository` | Network agent daemonset image repository | `docker.io/matilda1/matilda-k8s-network` |
+| `image.daemonset.tag` | Network agent daemonset image tag | `v2` |
+| `image.daemonset.pullPolicy` | Network agent daemonset image pull policy | `IfNotPresent` |
 | `service.type` | Service type | `ClusterIP` |
 | `service.port` | Service port | `8080` |
 | `rbac.create` | Create RBAC resources | `true` |
@@ -196,6 +202,23 @@ helm install matilda-k8s-agent matilda/matilda-k8s-agent \
 - Service account with minimal required permissions
 - Cluster-wide read access for discovery
 
+## Deployment Architecture
+
+This chart deploys two components:
+
+### 1. Main Agent Deployment
+- **Purpose**: Primary Kubernetes agent for cluster monitoring and management
+- **Type**: Deployment with configurable replicas
+- **Image**: `docker.io/matilda1/matilda-k8s-agent:v2`
+- **Port**: 8080 (configurable)
+
+### 2. Network Monitoring DaemonSet
+- **Purpose**: Network packet analysis and monitoring on all nodes
+- **Type**: DaemonSet (runs on every node)
+- **Image**: `docker.io/matilda1/matilda-k8s-network:v2`
+- **Port**: 9184 (metrics endpoint)
+- **Privileged**: Runs with privileged access for network monitoring
+
 ## Network Configuration
 
 The agent uses host networking by default, which provides several benefits:
@@ -205,16 +228,25 @@ The agent uses host networking by default, which provides several benefits:
 - **Simplified Networking**: Bypasses Kubernetes network policies for monitoring
 - **Better Performance**: Reduced network overhead for data collection
 - **Node Discovery**: Can discover and monitor all nodes in the cluster
+- **Network Monitoring**: DaemonSet can capture packets from node network interfaces
 
 ### Configuration Options
 ```yaml
 network:
   hostNetwork: true                    # Use host network (recommended)
   dnsPolicy: ClusterFirstWithHostNet  # DNS resolution policy
+
+# DaemonSet specific configuration
+image:
+  daemonset:
+    repository: docker.io/matilda1/matilda-k8s-network
+    tag: v2
+    pullPolicy: IfNotPresent
 ```
 
 ### Security Considerations
 - **Privileged Access**: Host network provides broader access to node resources
+- **DaemonSet Privileges**: Network monitoring daemonset requires privileged access
 - **RBAC Required**: Ensure proper RBAC permissions are configured
 - **Network Policies**: May bypass some Kubernetes network policies
 
@@ -238,12 +270,26 @@ The agent receives the following environment variables:
 
 ### Check Pod Status
 ```bash
+# Check main agent deployment
 kubectl get pods -l app.kubernetes.io/name=matilda-k8s-agent -n matilda-k8s-agent
+
+# Check network monitoring daemonset
+kubectl get pods -l app.kubernetes.io/component=network-agent -n matilda-k8s-agent
+
+# Check all pods
+kubectl get pods -n matilda-k8s-agent
 ```
 
 ### View Logs
 ```bash
+# Main agent logs
 kubectl logs -f deployment/matilda-k8s-agent -n matilda-k8s-agent
+
+# Network agent daemonset logs (on specific node)
+kubectl logs -f daemonset/matilda-k8s-agent-network-agent -n matilda-k8s-agent
+
+# All network agent pods logs
+kubectl logs -f -l app.kubernetes.io/component=network-agent -n matilda-k8s-agent
 ```
 
 ### Check Configuration

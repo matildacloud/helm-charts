@@ -2,8 +2,58 @@ apiVersion: v1
 entries:
   matilda-k8s-agent:
   - apiVersion: v2
+    appVersion: v2
+    created: "2025-10-23T12:31:55.5461341-05:00"
+    description: A Helm chart for Matilda Kubernetes Agent with network monitoring
+      capabilities
+    digest: 6e647cc25ee4a1bbb2cdcb795e03b1487eedb9477938c73e0b6045e4b41586f4
+    home: https://github.com/matildacloud/helm-charts
+    icon: https://raw.githubusercontent.com/kubernetes/kubernetes/master/logo/logo.png
+    keywords:
+    - kubernetes
+    - agent
+    - matilda
+    - monitoring
+    - network
+    - daemonset
+    maintainers:
+    - email: support@matildacloud.com
+      name: Matilda Cloud Team
+    name: matilda-k8s-agent
+    sources:
+    - https://github.com/matildacloud/helm-charts
+    type: application
+    urls:
+    - https://matildacloud.github.io/helm-charts/matilda-k8s-agent-0.4.1.tgz
+    version: 0.4.1
+  - apiVersion: v2
     appVersion: 1.0.0
-    created: "2025-10-06T11:27:04.5574386-05:00"
+    created: "2025-10-23T12:31:55.5445135-05:00"
+    description: A Helm chart for Matilda Kubernetes Agent with network monitoring
+      capabilities
+    digest: e065d4d6e9d9e8da954021c64c48c16440d889a01aa8742a0c88098fd277f19e
+    home: https://github.com/matildacloud/helm-charts
+    icon: https://raw.githubusercontent.com/kubernetes/kubernetes/master/logo/logo.png
+    keywords:
+    - kubernetes
+    - agent
+    - matilda
+    - monitoring
+    - network
+    - daemonset
+    maintainers:
+    - email: support@matildacloud.com
+      name: Matilda Cloud Team
+    name: matilda-k8s-agent
+    sources:
+    - https://github.com/matildacloud/helm-charts
+    type: application
+    urls:
+    - https://matildacloud.github.io/helm-charts/matilda-k8s-agent-0.4.0.tgz
+    version: 0.4.0
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2025-10-23T12:31:55.5420485-05:00"
     description: A Helm chart for Matilda Kubernetes Agent
     digest: 69eebb378db9b08c24eebcd29a1a976ad9ab86a4657f917a90e8ef1245e03e5d
     home: https://github.com/matildacloud/helm-charts
@@ -21,12 +71,12 @@ entries:
     - https://github.com/matildacloud/helm-charts
     type: application
     urls:
-    - matilda-k8s-agent-0.3.0.tgz
+    - https://matildacloud.github.io/helm-charts/matilda-k8s-agent-0.3.0.tgz
     version: 0.3.0
   matilda-k8s-svc:
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2025-10-06T11:27:04.5759324-05:00"
+    created: "2025-10-23T12:31:55.5485603-05:00"
     description: A Helm chart for creating a service account with read-only permissions
       and generating kubeconfig with non-expiring token
     digest: 41934641ca2a23a93128e149386fc982a1b4023e166bc04de4639c95e6604bf2
@@ -41,48 +91,11 @@ entries:
     name: matilda-k8s-svc
     type: application
     urls:
-    - matilda-k8s-svc-0.1.1.tgz
+    - https://matildacloud.github.io/helm-charts/matilda-k8s-svc-0.1.1.tgz
     version: 0.1.1
-  matilda-prometheus-stack:
-  - apiVersion: v2
-    appVersion: v0.86.0
-    created: "2025-01-27T12:00:00.0000000-05:00"
-    description: kube-prometheus-stack collects Kubernetes manifests, Grafana dashboards, and Prometheus rules combined with documentation and scripts to provide easy to operate end-to-end Kubernetes cluster monitoring with Prometheus using the Prometheus Operator.
-    digest: 0000000000000000000000000000000000000000000000000000000000000000
-    home: https://github.com/prometheus-operator/kube-prometheus
-    icon: https://raw.githubusercontent.com/prometheus/prometheus.github.io/master/assets/prometheus_logo-cb55bb5c346.png
-    keywords:
-    - operator
-    - prometheus
-    - kube-prometheus
-    maintainers:
-    - email: andrew@quadcorps.co.uk
-      name: andrewgkew
-    - email: gianrubio@gmail.com
-      name: gianrubio
-    - email: github.gkarthiks@gmail.com
-      name: gkarthiks
-    - email: kube-prometheus-stack@sisti.pt
-      name: GMartinez-Sisti
-    - email: github@jkroepke.de
-      name: jkroepke
-    - email: scott@r6by.com
-      name: scottrigby
-    - email: miroslav.hadzhiev@gmail.com
-      name: Xtigyro
-    - email: quentin.bisson@gmail.com
-      name: QuentinBisson
-    name: matilda-prometheus-stack
-    sources:
-    - https://github.com/prometheus-community/helm-charts
-    - https://github.com/prometheus-operator/kube-prometheus
-    type: application
-    urls:
-    - matilda-prometheus-stack-78.0.0.tgz
-    version: 78.0.0
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2025-10-06T11:27:04.5741692-05:00"
+    created: "2025-10-23T12:31:55.5472429-05:00"
     description: A Helm chart for creating a service account with read-only permissions
       and generating kubeconfig with non-expiring token
     digest: 0a737beb7b8477e45fd3535acb69808ac239780c41bbdf40edf3ffc7843e27e5
@@ -97,29 +110,172 @@ entries:
     name: matilda-k8s-svc
     type: application
     urls:
-    - matilda-k8s-svc-0.1.0.tgz
+    - https://matildacloud.github.io/helm-charts/matilda-k8s-svc-0.1.0.tgz
     version: 0.1.0
+  matilda-prometheus-stack:
+  - annotations:
+      artifacthub.io/license: Apache-2.0
+      artifacthub.io/links: |
+        - name: Chart Source
+          url: https://github.com/prometheus-community/helm-charts
+        - name: Upstream Project
+          url: https://github.com/prometheus-operator/kube-prometheus
+        - name: Upgrade Process
+          url: https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/README.md#upgrading-chart
+      artifacthub.io/operator: "true"
+    apiVersion: v2
+    appVersion: v0.86.0
+    created: "2025-10-23T12:31:55.6246845-05:00"
+    dependencies:
+    - condition: crds.enabled
+      name: crds
+      repository: ""
+      version: 0.0.0
+    - condition: kubeStateMetrics.enabled
+      name: kube-state-metrics
+      repository: https://prometheus-community.github.io/helm-charts
+      version: 6.3.0
+    - condition: nodeExporter.enabled
+      name: prometheus-node-exporter
+      repository: https://prometheus-community.github.io/helm-charts
+      version: 4.48.0
+    - condition: grafana.enabled
+      name: grafana
+      repository: https://grafana.github.io/helm-charts
+      version: 10.0.0
+    - condition: windowsMonitoring.enabled
+      name: prometheus-windows-exporter
+      repository: https://prometheus-community.github.io/helm-charts
+      version: 0.12.*
+    description: kube-prometheus-stack collects Kubernetes manifests, Grafana dashboards,
+      and Prometheus rules combined with documentation and scripts to provide easy
+      to operate end-to-end Kubernetes cluster monitoring with Prometheus using the
+      Prometheus Operator.
+    digest: 5475b3822926984497a36a8a1f44e70ad325718a12c969aedd50fe8ba67ede62
+    home: https://github.com/prometheus-operator/kube-prometheus
+    icon: https://raw.githubusercontent.com/prometheus/prometheus.github.io/master/assets/prometheus_logo-cb55bb5c346.png
+    keywords:
+    - operator
+    - prometheus
+    - kube-prometheus
+    kubeVersion: '>=1.25.0-0'
+    maintainers:
+    - email: andrew@quadcorps.co.uk
+      name: andrewgkew
+      url: https://github.com/andrewgkew
+    - email: gianrubio@gmail.com
+      name: gianrubio
+      url: https://github.com/gianrubio
+    - email: github.gkarthiks@gmail.com
+      name: gkarthiks
+      url: https://github.com/gkarthiks
+    - email: kube-prometheus-stack@sisti.pt
+      name: GMartinez-Sisti
+      url: https://github.com/GMartinez-Sisti
+    - email: github@jkroepke.de
+      name: jkroepke
+      url: https://github.com/jkroepke
+    - email: scott@r6by.com
+      name: scottrigby
+      url: https://github.com/scottrigby
+    - email: miroslav.hadzhiev@gmail.com
+      name: Xtigyro
+      url: https://github.com/Xtigyro
+    - email: quentin.bisson@gmail.com
+      name: QuentinBisson
+      url: https://github.com/QuentinBisson
+    name: matilda-prometheus-stack
+    sources:
+    - https://github.com/prometheus-community/helm-charts
+    - https://github.com/prometheus-operator/kube-prometheus
+    type: application
+    urls:
+    - https://matildacloud.github.io/helm-charts/matilda-prometheus-stack-78.0.0.tgz
+    version: 78.0.0
   matilda-thanos:
   - apiVersion: v2
     appVersion: v0.31.0
-    created: "2025-10-06T11:27:04.6327622-05:00"
+    created: "2025-10-23T12:31:55.6277929-05:00"
     description: A Helm chart for deploying Thanos components on Kubernetes.
     digest: 27b0ed69781a138cc5bab332c1ee5c246ec14a9664b649f93aad4c7f63d36b72
     icon: https://raw.githubusercontent.com/thanos-io/thanos/master/docs/icon/thanos-logo.png
     name: matilda-thanos
     type: application
     urls:
-    - matilda-thanos-0.2.1.tgz
+    - https://matildacloud.github.io/helm-charts/matilda-thanos-0.2.1.tgz
     version: 0.2.1
   - apiVersion: v2
     appVersion: v0.31.0
-    created: "2025-10-06T11:27:04.6134804-05:00"
+    created: "2025-10-23T12:31:55.6257116-05:00"
     description: A Helm chart for deploying Thanos components on Kubernetes.
     digest: 0775282241cf564ad811b014f7d2b659143a579074bc142403fdb4b1b79e2ae2
     icon: https://raw.githubusercontent.com/thanos-io/thanos/master/docs/icon/thanos-logo.png
     name: matilda-thanos
     type: application
     urls:
-    - matilda-thanos-0.1.0.tgz
+    - https://matildacloud.github.io/helm-charts/matilda-thanos-0.1.0.tgz
     version: 0.1.0
-generated: "2025-01-27T12:00:00.0000000-05:00"
+  prometheus:
+  - annotations:
+      artifacthub.io/license: Apache-2.0
+      artifacthub.io/links: |
+        - name: Chart Source
+          url: https://github.com/prometheus-community/helm-charts
+        - name: Upstream Project
+          url: https://github.com/prometheus/prometheus
+    apiVersion: v2
+    appVersion: v3.3.1
+    created: "2025-10-23T12:31:55.6408373-05:00"
+    dependencies:
+    - condition: alertmanager.enabled
+      name: alertmanager
+      repository: https://prometheus-community.github.io/helm-charts
+      version: 1.18.*
+    - condition: kube-state-metrics.enabled
+      name: kube-state-metrics
+      repository: https://prometheus-community.github.io/helm-charts
+      version: 5.33.*
+    - condition: prometheus-node-exporter.enabled
+      name: prometheus-node-exporter
+      repository: https://prometheus-community.github.io/helm-charts
+      version: 4.46.*
+    - condition: prometheus-pushgateway.enabled
+      name: prometheus-pushgateway
+      repository: https://prometheus-community.github.io/helm-charts
+      version: 3.2.*
+    description: Prometheus is a monitoring system and time series database.
+    digest: 33074e73dbdf3dcca51eecfb5f28bd89f8c5ba0a1ff20c9e8069384cb29b3b25
+    home: https://prometheus.io/
+    icon: https://raw.githubusercontent.com/prometheus/prometheus.github.io/master/assets/prometheus_logo-cb55bb5c346.png
+    keywords:
+    - monitoring
+    - prometheus
+    kubeVersion: '>=1.19.0-0'
+    maintainers:
+    - email: gianrubio@gmail.com
+      name: gianrubio
+      url: https://github.com/gianrubio
+    - email: zanhsieh@gmail.com
+      name: zanhsieh
+      url: https://github.com/zanhsieh
+    - email: miroslav.hadzhiev@gmail.com
+      name: Xtigyro
+      url: https://github.com/Xtigyro
+    - email: naseem@transit.app
+      name: naseemkullah
+      url: https://github.com/naseemkullah
+    - email: rootsandtrees@posteo.de
+      name: zeritti
+      url: https://github.com/zeritti
+    name: prometheus
+    sources:
+    - https://github.com/prometheus/alertmanager
+    - https://github.com/prometheus/prometheus
+    - https://github.com/prometheus/pushgateway
+    - https://github.com/prometheus/node_exporter
+    - https://github.com/kubernetes/kube-state-metrics
+    type: application
+    urls:
+    - https://matildacloud.github.io/helm-charts/prometheus-27.14.0.tgz
+    version: 27.14.0
+generated: "2025-10-23T12:31:55.5401176-05:00"

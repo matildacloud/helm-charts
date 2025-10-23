@@ -18,9 +18,13 @@ id: ""        # Required: Cluster asset ID
 # Image configuration
 image:
   repository: docker.io/matilda1/matilda-k8s-agent
-  tag: "latest"
+  tag: "v2"
   pullPolicy: IfNotPresent
-
+  # Daemonset image configuration
+  daemonset:
+    repository: docker.io/matilda1/matilda-k8s-network
+    tag: "v2"
+    pullPolicy: IfNotPresent
 # Image pull secrets
 imagePullSecrets: []
   # - name: myregistrykey

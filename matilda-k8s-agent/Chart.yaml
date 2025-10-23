@@ -1,14 +1,16 @@
 apiVersion: v2
-appVersion: "1.0.0"
-description: A Helm chart for Matilda Kubernetes Agent
+appVersion: "v2"
+description: A Helm chart for Matilda Kubernetes Agent with network monitoring capabilities
 name: matilda-k8s-agent
 type: application
-version: 0.3.0
+version: 0.4.1
 keywords:
   - kubernetes
   - agent
   - matilda
   - monitoring
+  - network
+  - daemonset
 home: https://github.com/matildacloud/helm-charts
 sources:
   - https://github.com/matildacloud/helm-charts
