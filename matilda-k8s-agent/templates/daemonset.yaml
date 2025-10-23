@@ -26,8 +26,6 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       serviceAccountName: {{ include "matilda-k8s-agent.serviceAccountName" . }}
-      securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
       {{- if .Values.network.hostNetwork }}
       hostNetwork: {{ .Values.network.hostNetwork }}
       {{- end }}
@@ -51,8 +49,9 @@ spec:
         image: "{{ .Values.image.daemonset.repository }}:{{ .Values.image.daemonset.tag | default .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.image.daemonset.pullPolicy }}
         securityContext:
-          {{- toYaml .Values.securityContext | nindent 10 }}
           privileged: true
+          runAsUser: 0
+          runAsGroup: 0
         ports:
         - name: metrics
           containerPort: 9184
