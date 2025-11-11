@@ -64,6 +64,8 @@ spec:
                 secretKeyRef:
                   name: {{ include "matilda-k8s-agent.secretName" . }}
                   key: cluster-asset-id
+            - name: K8s_AGENT_NS
+              value: "{{ .Values.namespace.name }}"
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
