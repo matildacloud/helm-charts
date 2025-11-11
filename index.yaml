@@ -3,7 +3,32 @@ entries:
   matilda-k8s-agent:
   - apiVersion: v2
     appVersion: v2
-    created: "2025-10-23T14:49:12.2398278-05:00"
+    created: "2025-11-11T10:06:07.4636163-06:00"
+    description: A Helm chart for Matilda Kubernetes Agent with network monitoring
+      capabilities
+    digest: 162b1d868d7b195b92cdc06e27c56019d2da1be18002da2f1da58ecfc4e2d2f8
+    home: https://github.com/matildacloud/helm-charts
+    icon: https://raw.githubusercontent.com/kubernetes/kubernetes/master/logo/logo.png
+    keywords:
+    - kubernetes
+    - agent
+    - matilda
+    - monitoring
+    - network
+    - daemonset
+    maintainers:
+    - email: support@matildacloud.com
+      name: Matilda Cloud Team
+    name: matilda-k8s-agent
+    sources:
+    - https://github.com/matildacloud/helm-charts
+    type: application
+    urls:
+    - https://matildacloud.github.io/helm-charts/matilda-k8s-agent-0.4.5.tgz
+    version: 0.4.5
+  - apiVersion: v2
+    appVersion: v2
+    created: "2025-11-11T10:06:07.4338239-06:00"
     description: A Helm chart for Matilda Kubernetes Agent with network monitoring
       capabilities
     digest: 384cac329f958575d23faf965b1ba124d3ef42241e6df225f0b0ce9387b08a3c
@@ -24,11 +49,11 @@ entries:
     - https://github.com/matildacloud/helm-charts
     type: application
     urls:
-    - https://matildacloud.github.io/helm-charts/matilda-k8s-agent-0.4.4.tgz
+    - matilda-k8s-agent-0.4.4.tgz
     version: 0.4.4
   - apiVersion: v2
     appVersion: v2
-    created: "2025-10-23T14:49:12.2378179-05:00"
+    created: "2025-11-11T10:06:07.4101675-06:00"
     description: A Helm chart for Matilda Kubernetes Agent with network monitoring
       capabilities
     digest: 2fecbd6dd4855815d15fc133d92c7af80ebd426c495681f3016c4329eabf9b0d
@@ -49,11 +74,11 @@ entries:
     - https://github.com/matildacloud/helm-charts
     type: application
     urls:
-    - https://matildacloud.github.io/helm-charts/matilda-k8s-agent-0.4.3.tgz
+    - matilda-k8s-agent-0.4.3.tgz
     version: 0.4.3
   - apiVersion: v2
     appVersion: v2
-    created: "2025-10-23T14:49:12.2358194-05:00"
+    created: "2025-11-11T10:06:07.3832052-06:00"
     description: A Helm chart for Matilda Kubernetes Agent with network monitoring
       capabilities
     digest: 7d5903bc1e9bbe7bc25218ca72ef794df02e88952b5b96192d11aa3ed15ee865
@@ -74,11 +99,11 @@ entries:
     - https://github.com/matildacloud/helm-charts
     type: application
     urls:
-    - https://matildacloud.github.io/helm-charts/matilda-k8s-agent-0.4.2.tgz
+    - matilda-k8s-agent-0.4.2.tgz
     version: 0.4.2
   - apiVersion: v2
     appVersion: v2
-    created: "2025-10-23T14:49:12.2338225-05:00"
+    created: "2025-11-11T10:06:07.353786-06:00"
     description: A Helm chart for Matilda Kubernetes Agent with network monitoring
       capabilities
     digest: 6e647cc25ee4a1bbb2cdcb795e03b1487eedb9477938c73e0b6045e4b41586f4
@@ -99,11 +124,11 @@ entries:
     - https://github.com/matildacloud/helm-charts
     type: application
     urls:
-    - https://matildacloud.github.io/helm-charts/matilda-k8s-agent-0.4.1.tgz
+    - matilda-k8s-agent-0.4.1.tgz
     version: 0.4.1
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2025-10-23T14:49:12.232819-05:00"
+    created: "2025-11-11T10:06:07.3232742-06:00"
     description: A Helm chart for Matilda Kubernetes Agent with network monitoring
       capabilities
     digest: e065d4d6e9d9e8da954021c64c48c16440d889a01aa8742a0c88098fd277f19e
@@ -124,11 +149,11 @@ entries:
     - https://github.com/matildacloud/helm-charts
     type: application
     urls:
-    - https://matildacloud.github.io/helm-charts/matilda-k8s-agent-0.4.0.tgz
+    - matilda-k8s-agent-0.4.0.tgz
     version: 0.4.0
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2025-10-23T14:49:12.2308189-05:00"
+    created: "2025-11-11T10:06:07.3046509-06:00"
     description: A Helm chart for Matilda Kubernetes Agent
     digest: 69eebb378db9b08c24eebcd29a1a976ad9ab86a4657f917a90e8ef1245e03e5d
     home: https://github.com/matildacloud/helm-charts
@@ -146,12 +171,12 @@ entries:
     - https://github.com/matildacloud/helm-charts
     type: application
     urls:
-    - https://matildacloud.github.io/helm-charts/matilda-k8s-agent-0.3.0.tgz
+    - matilda-k8s-agent-0.3.0.tgz
     version: 0.3.0
   matilda-k8s-svc:
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2025-10-23T14:49:12.2418806-05:00"
+    created: "2025-11-11T10:06:07.5129739-06:00"
     description: A Helm chart for creating a service account with read-only permissions
       and generating kubeconfig with non-expiring token
     digest: 41934641ca2a23a93128e149386fc982a1b4023e166bc04de4639c95e6604bf2
@@ -166,11 +191,11 @@ entries:
     name: matilda-k8s-svc
     type: application
     urls:
-    - https://matildacloud.github.io/helm-charts/matilda-k8s-svc-0.1.1.tgz
+    - matilda-k8s-svc-0.1.1.tgz
     version: 0.1.1
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2025-10-23T14:49:12.2408198-05:00"
+    created: "2025-11-11T10:06:07.4894011-06:00"
     description: A Helm chart for creating a service account with read-only permissions
       and generating kubeconfig with non-expiring token
     digest: 0a737beb7b8477e45fd3535acb69808ac239780c41bbdf40edf3ffc7843e27e5
@@ -185,7 +210,7 @@ entries:
     name: matilda-k8s-svc
     type: application
     urls:
-    - https://matildacloud.github.io/helm-charts/matilda-k8s-svc-0.1.0.tgz
+    - matilda-k8s-svc-0.1.0.tgz
     version: 0.1.0
   matilda-prometheus-stack:
   - annotations:
@@ -200,7 +225,7 @@ entries:
       artifacthub.io/operator: "true"
     apiVersion: v2
     appVersion: v0.86.0
-    created: "2025-10-23T14:49:12.3178635-05:00"
+    created: "2025-11-11T10:06:07.6448593-06:00"
     dependencies:
     - condition: crds.enabled
       name: crds
@@ -265,30 +290,30 @@ entries:
     - https://github.com/prometheus-operator/kube-prometheus
     type: application
     urls:
-    - https://matildacloud.github.io/helm-charts/matilda-prometheus-stack-78.0.0.tgz
+    - matilda-prometheus-stack-78.0.0.tgz
     version: 78.0.0
   matilda-thanos:
   - apiVersion: v2
     appVersion: v0.31.0
-    created: "2025-10-23T14:49:12.3234333-05:00"
+    created: "2025-11-11T10:06:07.7167007-06:00"
     description: A Helm chart for deploying Thanos components on Kubernetes.
     digest: 27b0ed69781a138cc5bab332c1ee5c246ec14a9664b649f93aad4c7f63d36b72
     icon: https://raw.githubusercontent.com/thanos-io/thanos/master/docs/icon/thanos-logo.png
     name: matilda-thanos
     type: application
     urls:
-    - https://matildacloud.github.io/helm-charts/matilda-thanos-0.2.1.tgz
+    - matilda-thanos-0.2.1.tgz
     version: 0.2.1
   - apiVersion: v2
     appVersion: v0.31.0
-    created: "2025-10-23T14:49:12.3194323-05:00"
+    created: "2025-11-11T10:06:07.6826987-06:00"
     description: A Helm chart for deploying Thanos components on Kubernetes.
     digest: 0775282241cf564ad811b014f7d2b659143a579074bc142403fdb4b1b79e2ae2
     icon: https://raw.githubusercontent.com/thanos-io/thanos/master/docs/icon/thanos-logo.png
     name: matilda-thanos
     type: application
     urls:
-    - https://matildacloud.github.io/helm-charts/matilda-thanos-0.1.0.tgz
+    - matilda-thanos-0.1.0.tgz
     version: 0.1.0
   prometheus:
   - annotations:
@@ -300,7 +325,7 @@ entries:
           url: https://github.com/prometheus/prometheus
     apiVersion: v2
     appVersion: v3.3.1
-    created: "2025-10-23T14:49:12.3384765-05:00"
+    created: "2025-11-11T10:06:07.8185317-06:00"
     dependencies:
     - condition: alertmanager.enabled
       name: alertmanager
@@ -351,6 +376,6 @@ entries:
     - https://github.com/kubernetes/kube-state-metrics
     type: application
     urls:
-    - https://matildacloud.github.io/helm-charts/prometheus-27.14.0.tgz
+    - prometheus-27.14.0.tgz
     version: 27.14.0
-generated: "2025-10-23T14:49:12.2288192-05:00"
+generated: "2025-11-11T10:06:07.2317101-06:00"
