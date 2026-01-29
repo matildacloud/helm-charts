@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: metrics-exporter
+  namespace: matilda-k8s-agent
+spec:
+  selector:
+    matchLabels:
+      app: metrics-exporter
+  template:
+    metadata:
+      labels:
+        app: metrics-exporter
+    spec:
+      hostNetwork: false
+      containers:
+      - name: exporter
+        image: python:3.11-slim
+        command: ["python3", "-m", "http.server", "9184", "--directory", "/metrics"]
+        ports:
+        - containerPort: 9184
+        volumeMounts:
+        - name: metrics-shared
+          mountPath: /metrics
+      volumes:
+      - name: metrics-shared
+        hostPath:
+          path: /var/lib/network-metrics
+          type: DirectoryOrCreate
