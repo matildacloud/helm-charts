@@ -44,6 +44,18 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      volumes:
+      - name: metrics-shared
+        hostPath:
+          path: /var/lib/network-metrics
+          type: DirectoryOrCreate
+      initContainers:
+      - name: cleanup
+        image: busybox:1.36
+        command: ["sh", "-c", "rm -rf /var/lib/network-metrics/*"]
+        volumeMounts:
+        - name: metrics-shared
+          mountPath: /var/lib/network-metrics
       containers:
       - name: network-agent
         image: "{{ .Values.image.daemonset.repository }}:{{ .Values.image.daemonset.tag | default .Chart.AppVersion }}"
@@ -52,10 +64,6 @@ spec:
           privileged: true
           runAsUser: 0
           runAsGroup: 0
-        ports:
-        - name: metrics
-          containerPort: 9184
-          protocol: TCP
         {{- with .Values.resources }}
         resources:
           {{- toYaml . | nindent 10 }}
@@ -70,6 +78,9 @@ spec:
               key: api-key
         - name: CLUSTER_ID
           value: {{ .Values.id | quote }}
+        volumeMounts:
+        - name: metrics-shared
+          mountPath: /tmp/metrics
 ---
 apiVersion: v1
 kind: Service
