@@ -61,10 +61,12 @@ A Helm chart for deploying the Matilda Kubernetes Agent with secure configuratio
 ```bash
 # Install with required parameters (namespace will be created automatically)
 helm install matilda-k8s-agent matilda/matilda-k8s-agent \
-  --set api_host=https://api.matildacloud.com \
+  --set api_host=<MATILDA ENDPOINT> \
   --set api_key=YOUR_API_KEY \
   --set id=YOUR_CLUSTER_ASSET_ID
 ```
+
+The Matilda API endpoint (`api_host`) varies between Matilda Cloud (SaaS) and hosted environments. Use the endpoint provided for your specific environment.
 
 **Basic Installation:**
 ```bash
