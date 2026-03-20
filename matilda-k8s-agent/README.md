@@ -35,10 +35,12 @@ helm repo update
 
 # Install with required parameters (namespace will be created automatically)
 helm install matilda-k8s-agent matilda/matilda-k8s-agent \
-  --set api_host=https://api.matildacloud.com \
+  --set api_host=<MATILDA ENDPOINT> \
   --set api_key=YOUR_API_KEY \
   --set id=YOUR_CLUSTER_ASSET_ID
 ```
+
+`api_host` varies between Matilda Cloud (SaaS) and hosted environments. Use the endpoint provided for your environment.
 
 ### Using Values File
 
@@ -46,7 +48,7 @@ Create a `my-values.yaml` file:
 
 ```yaml
 # my-values.yaml
-api_host: "https://api.matildacloud.com"
+api_host: "<MATILDA ENDPOINT>"
 api_key: "your-api-key-here"
 id: "your-cluster-asset-id"
 
@@ -110,7 +112,7 @@ helm install matilda-k8s-agent matilda/matilda-k8s-agent \
 
 | Parameter | Description | Example |
 |-----------|-------------|---------|
-| `api_host` | API host URL for Matilda Cloud | `https://api.matildacloud.com` |
+| `api_host` | API host URL (varies for SaaS and hosted environments) | `<MATILDA ENDPOINT>` |
 | `api_key` | API key for authentication | `abc123def456` |
 | `id` | Cluster asset ID | `cluster-12345` |
 
