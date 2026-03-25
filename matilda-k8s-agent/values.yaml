@@ -47,7 +47,10 @@ podAnnotations: {}
 podLabels: {}
 
 # Pod security context
-podSecurityContext: {}
+podSecurityContext:
+  # Pod-level security context (run as root)
+  runAsUser: 0
+  runAsNonRoot: false
 
 # Network configuration
 network:
