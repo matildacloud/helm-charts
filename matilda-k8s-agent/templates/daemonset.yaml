@@ -53,6 +53,9 @@ spec:
       - name: cleanup
         image: busybox:1.36
         command: ["sh", "-c", "rm -rf /var/lib/network-metrics/*"]
+        securityContext:
+          privileged: true
+          runAsUser: 0
         volumeMounts:
         - name: metrics-shared
           mountPath: /var/lib/network-metrics

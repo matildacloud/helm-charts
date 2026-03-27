@@ -17,6 +17,11 @@ spec:
       - name: exporter
         image: python:3.11-slim
         command: ["python3", "-m", "http.server", "9184", "--directory", "/metrics"]
+        securityContext:
+          runAsNonRoot: false
+          runAsUser: 0
+          seLinuxOptions:
+            type: spc_t
         ports:
         - containerPort: 9184
         volumeMounts:
