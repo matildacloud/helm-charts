@@ -13,17 +13,17 @@ rules:
       - nodes/stats
       - nodes/metrics
       - pods
+      - pods/metrics
       - namespaces
       - services
       - endpoints
-      - configmaps
+      - endpointslices
       - persistentvolumes
       - persistentvolumeclaims
       - replicationcontrollers
       - serviceaccounts
       - resourcequotas
       - limitranges
-      - secrets
       - deployments
       - replicasets
       - statefulsets
@@ -37,12 +37,20 @@ rules:
       - networkpolicies
       - storageclasses
       - volumeattachments
+      - csinodes
+      - csidrivers
+      - csistoragecapacities
       - roles
       - rolebindings
       - clusterroles
       - clusterrolebindings
       - poddisruptionbudgets
       - customresourcedefinitions
+      - certificatesigningrequests
+      - apiservices
+      - volumesnapshots
+      - volumesnapshotclasses
+      - volumesnapshotcontents
     verbs: ["get", "list", "watch"]
 
 --- 
