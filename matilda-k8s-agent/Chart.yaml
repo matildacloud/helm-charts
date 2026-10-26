@@ -1,9 +1,9 @@
 apiVersion: v2
-appVersion: "v22.0.0"
+appVersion: "v23.0.0"
 description: A Helm chart for Matilda Kubernetes Agent with network monitoring capabilities
 name: matilda-k8s-agent
 type: application
-version: 22.0.0
+version: 23.0.0
 keywords:
   - kubernetes
   - agent
